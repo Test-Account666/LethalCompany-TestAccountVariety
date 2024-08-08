@@ -9,6 +9,7 @@ using static TestAccountCore.Netcode;
 
 namespace TestAccountVariety;
 
+[BepInDependency("evaisa.lethallib")]
 [BepInDependency("TestAccount666.TestAccountCore", "1.3.0")]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class TestAccountVariety : BaseUnityPlugin {

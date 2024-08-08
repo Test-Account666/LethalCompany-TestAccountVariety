@@ -15,7 +15,8 @@ manifest=$(cat <<EOF
     "description": "$description",
     "dependencies": [
         "BepInEx-BepInExPack-5.4.2100",
-        "TestAccount666-TestAccountCore-1.3.0"
+        "TestAccount666-TestAccountCore-1.3.0",
+        "Evaisa-LethalLib-0.16.1"
     ]
 }
 EOF
