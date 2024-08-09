@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.2.0
+
+\+ Added Yippee Scrap :><br>
+
 ## 1.1.0
 
 \+ Added secret thingy<br>
