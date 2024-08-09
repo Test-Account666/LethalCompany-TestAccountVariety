@@ -11,6 +11,9 @@ public static class ThrowableCubePatch {
     private static bool RedirectExplodeStunGrenade(StunGrenadeItem __instance) {
         if (__instance is not ThrowableCube throwableCube) return true;
 
+        if (!throwableCube.IsOwner) return false;
+        if (!throwableCube.grabbable) return false;
+
         throwableCube.ExplodeServerRpc();
         return false;
     }
