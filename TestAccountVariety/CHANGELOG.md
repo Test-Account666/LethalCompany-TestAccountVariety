@@ -1,12 +1,16 @@
 # TestAccountVariety
 
+## 1.4.3
+
+\* Fixed Toy Ship for clients<br>
+
 ## 1.4.2
 
 \* Fixed? Issues with enemies<br>
 
 ## 1.4.1
 
-\* Fix Toy Ship Light<br>
+\* Fixed Toy Ship Light<br>
 
 ## 1.4.0
 
