@@ -63,25 +63,13 @@ public class GiftMimic : NetworkBehaviour {
 
         if (VarietyConfig.giftMimicSpawnsOutsideEnemies.Value) spawnableEnemies.AddRange(StartOfRound.Instance.currentLevel.OutsideEnemies);
 
-        EnemyAI enemyAI;
+        var spawnIndex = _random.NextInt(0, spawnableEnemies.Count);
 
-        while (true) {
-            var spawnIndex = _random.NextInt(0, spawnableEnemies.Count);
+        var spawnableEnemy = spawnableEnemies[spawnIndex];
 
-            var spawnableEnemy = spawnableEnemies[spawnIndex];
+        var spawnPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(transform.position, 5f);
 
-            var enemy = Instantiate(spawnableEnemy.enemyType.enemyPrefab, transform.position, Quaternion.identity);
-
-            var hasEnemyAi = enemy.TryGetComponent(out enemyAI);
-
-            if (hasEnemyAi) break;
-        }
-
-        enemyAI.isOutside = false;
-
-        var networkObject = enemyAI.NetworkObject;
-
-        networkObject.Spawn();
+        RoundManager.Instance.SpawnEnemyGameObject(spawnPosition, 0, -1, spawnableEnemy.enemyType);
 
         OpenGiftClientRpc();
     }
