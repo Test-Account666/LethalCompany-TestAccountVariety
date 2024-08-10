@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.3.0
+
+\+ Added Gift Box mimic<br>
+
 ## 1.2.0
 
 \+ Added Yippee Scrap :><br>
