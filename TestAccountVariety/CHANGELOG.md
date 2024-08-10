@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.4.0
+
+\+ Added 3 silly scraps<br>
+
 ## 1.3.1
 
 \+ Added more possible gift box mimic names<br>
