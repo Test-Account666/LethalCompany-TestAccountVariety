@@ -7,6 +7,10 @@ using Random = Unity.Mathematics.Random;
 namespace TestAccountVariety.Hazards.GiftMimic;
 
 public class GiftMimic : NetworkBehaviour {
+    public static readonly List<string> PossibleNames = [
+        "Giftt", "Gift Boxx", "Git Box", "Git", "Lunx Box", "Lunch", "Lunch Box", "Don't Touch", "GIFT BOX", "gift box", "Webley Box",
+    ];
+
     private Random _random;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -39,11 +43,7 @@ public class GiftMimic : NetworkBehaviour {
     }
 
     private void Start() {
-        string[] possibleNames = [
-            "Giftt", "Gift Boxx", "Git Box", "Git", "Lunx Box", "Lunch", "Lunch Box", "Don't Touch", "GIFT BOX", "gift box",
-        ];
-
-        var randomName = possibleNames[UnityEngine.Random.Range(0, possibleNames.Length)];
+        var randomName = PossibleNames[UnityEngine.Random.Range(0, PossibleNames.Count)];
 
         var randomValue = UnityEngine.Random.Range(23, 53);
 
