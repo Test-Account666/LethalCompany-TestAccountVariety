@@ -9,7 +9,7 @@ namespace TestAccountVariety.Hazards.GiftMimic;
 public class GiftMimic : NetworkBehaviour {
     public static readonly List<string> PossibleNames = [
         "Giftt", "Gift Boxx", "Git Box", "Git", "Lunx Box", "Lunch", "Lunch Box", "Don't Touch", "GIFT BOX", "gift box", "Webley Box", "Git Hub",
-        "Present",
+        "Present", "Haha Box",
     ];
 
     private Random _random;
