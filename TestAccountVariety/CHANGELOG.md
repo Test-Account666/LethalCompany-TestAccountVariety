@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.3.1
+
+\+ Added more possible gift box mimic names<br>
+
 ## 1.3.0
 
 \+ Added Gift Box mimic<br>
