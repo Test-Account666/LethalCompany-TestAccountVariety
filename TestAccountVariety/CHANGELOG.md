@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.6.0
+
+\+ Added Alexandria Doll (Lunxara)<br>
+
 ## 1.5.0
 
 \+ Added Lunx Painting Scrap<br>

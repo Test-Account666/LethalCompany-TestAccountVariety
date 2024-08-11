@@ -12,6 +12,8 @@ Currently, adds:
 - Ship Toy
 - Webley Pyramid
 - Pikachu
+- Lunx Painting
+- Alexandria Doll (Lunxara)
 
 </details>
 
