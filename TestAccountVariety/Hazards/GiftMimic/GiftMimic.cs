@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -55,6 +56,10 @@ public class GiftMimic : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     public void OpenGiftServerRpc() {
+        StartCoroutine(SpawnEnemy(1F));
+    }
+
+    public IEnumerator SpawnEnemy(float timeOut) {
         _random = new((uint) (DateTime.Now.Ticks & 0x0000FFFF));
 
         List<SpawnableEnemyWithRarity> spawnableEnemies = [
@@ -63,13 +68,27 @@ public class GiftMimic : NetworkBehaviour {
 
         if (VarietyConfig.giftMimicSpawnsOutsideEnemies.Value) spawnableEnemies.AddRange(StartOfRound.Instance.currentLevel.OutsideEnemies);
 
-        var spawnIndex = _random.NextInt(0, spawnableEnemies.Count);
+        while (true) {
+            yield return new WaitForEndOfFrame();
 
-        var spawnableEnemy = spawnableEnemies[spawnIndex];
+            timeOut -= Time.deltaTime;
 
-        var spawnPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(transform.position, 5f);
+            if (timeOut <= 0) {
+                TestAccountVariety.Logger.LogFatal("Failed to spawn enemy from Gift Mimic! Are enemies available?");
+                yield break;
+            }
 
-        RoundManager.Instance.SpawnEnemyGameObject(spawnPosition, 0, -1, spawnableEnemy.enemyType);
+            var spawnIndex = _random.NextInt(0, spawnableEnemies.Count);
+
+            var spawnableEnemy = spawnableEnemies[spawnIndex];
+
+            if (spawnableEnemy.rarity <= 0) continue;
+
+            var spawnPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(transform.position, 5f);
+
+            RoundManager.Instance.SpawnEnemyGameObject(spawnPosition, 0, -1, spawnableEnemy.enemyType);
+            break;
+        }
 
         OpenGiftClientRpc();
     }
