@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.7.0
+
+\+ Added Prison Mine<br>
+\+ Added Pepsi Can<br>
+\* Fixed some items shadow realming themselves<br>
+
 ## 1.6.0
 
 \+ Added Alexandria Doll (Lunxara)<br>
