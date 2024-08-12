@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.7.1
+
+\* Changed Pepsi Can sound<br>
+
 ## 1.7.0
 
 \+ Added Prison Mine<br>
