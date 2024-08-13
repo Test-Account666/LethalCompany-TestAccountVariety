@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.8.0
+
+\+ Added new cosmetic<br>
+\* Changed Prison Mine sounds<br>
+
 ## 1.7.1
 
 \* Changed Pepsi Can sound<br>
