@@ -57,7 +57,7 @@ public class PrisonMine : NetworkBehaviour {
 
     [ClientRpc]
     public void TriggerCageClientRpc() {
-        nextTrigger = 6F;
+        nextTrigger = 6F + 12F;
         StartCoroutine(TriggerPrisonMine());
     }
 
@@ -72,7 +72,7 @@ public class PrisonMine : NetworkBehaviour {
         audioSource.PlayOneShot(trapClip);
         farAudioSource.PlayOneShot(farTrapClip);
 
-        yield return new WaitForSeconds(3F);
+        yield return new WaitForSeconds(12F);
 
         animator.SetTrigger(_UntriggerAnimatorHash);
 
