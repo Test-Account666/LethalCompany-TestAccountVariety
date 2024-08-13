@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.9.0
+
+\# Increased Prison Mine imprisonment from 3 to 12 seconds<br>
+
 ## 1.8.0
 
 \+ Added new cosmetic<br>
