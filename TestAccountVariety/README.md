@@ -14,6 +14,7 @@ Currently, adds:
 - Pikachu
 - Lunx Painting
 - Alexandria Doll (Lunxara)
+- Pepsi Can
 
 </details>
 
@@ -22,6 +23,7 @@ Currently, adds:
 
 - Propulsion Mine
 - Gift Mimic
+- Prison Mine
 
 </details>
 
@@ -30,5 +32,6 @@ Currently, adds:
 
 - Shoulder Cube
 - Cube Head
+- Ship Hat
 
 </details>
