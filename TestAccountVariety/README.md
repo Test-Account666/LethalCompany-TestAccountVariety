@@ -15,6 +15,7 @@ Currently, adds:
 - Lunx Painting
 - Alexandria Doll (Lunxara)
 - Pepsi Can
+- Corn
 
 </details>
 
