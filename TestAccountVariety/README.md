@@ -16,6 +16,7 @@ Currently, adds:
 - Alexandria Doll (Lunxara)
 - Pepsi Can
 - Corn
+- [Cleaning Drone Toy (Moonswept)](https://thunderstore.io/c/lethal-company/p/MoonsweptTeam/Moonswept/)
 
 </details>
 

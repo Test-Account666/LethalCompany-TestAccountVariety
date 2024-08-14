@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.11.0
+
+\+ Added Cleaning Drone Toy scrap<br>
+\* Fixed Alexandria Doll<br>
+
 ## 1.10.0
 
 \+ Added Corn<br>
