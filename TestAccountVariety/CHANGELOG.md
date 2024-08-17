@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.12.0
+
+\+ Added some silly things to the Webley Pyramid<br>
+
 ## 1.11.0
 
 \+ Added Cleaning Drone Toy scrap<br>
