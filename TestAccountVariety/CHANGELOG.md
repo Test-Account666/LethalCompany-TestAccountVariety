@@ -1,5 +1,14 @@
 # TestAccountVariety
 
+## 1.13.0
+
+\+ Added Toy Car<br>
+\+ Added easter egg in Ship Toy<br>
+\* Fixed Webley Pyramid<br>
+\# Adjusted Alexandria Doll sound volume *again*<br>
+\# Update Unity Project to v61. Some things may sound/look/react a bit different since I had to re-do some things<br>
+\# Weights and values may need a re-balance<br>
+
 ## 1.12.0
 
 \+ Added some silly things to the Webley Pyramid<br>

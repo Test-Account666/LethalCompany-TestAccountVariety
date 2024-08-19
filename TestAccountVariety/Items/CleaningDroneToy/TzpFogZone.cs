@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace TestAccountVariety.Items.CleaningDroneToy;
