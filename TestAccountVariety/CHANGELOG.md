@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.14.1
+
+\# Adjusted the cube shoulder cosmetic position for that on person<br>
+
 ## 1.14.0
 
 \+ Added HoldableNoisemakerProp class in case I want to make more scraps like the Toy Car<br>
