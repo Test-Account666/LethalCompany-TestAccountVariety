@@ -100,8 +100,12 @@ public class GiftMimic : NetworkBehaviour {
         particleSystem.Play();
 
         meshRenderer.enabled = false;
-        interactTrigger.interactable = false;
-        interactTrigger.enabled = false;
+
+        //For some reason, interactTrigger can be null here...
+        if (interactTrigger) {
+            interactTrigger.interactable = false;
+            interactTrigger.enabled = false;
+        }
 
         scanNodeProperties.gameObject.SetActive(false);
     }
