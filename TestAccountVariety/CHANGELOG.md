@@ -1,8 +1,12 @@
 # TestAccountVariety
 
+## 1.14.2
+
+\* Fix typo in Changelogs<br>
+
 ## 1.14.1
 
-\# Adjusted the cube shoulder cosmetic position for that on person<br>
+\# Adjusted the cube shoulder cosmetic position for that one person<br>
 
 ## 1.14.0
 
