@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.14.0
+
+\+ Added HoldableNoisemakerProp class in case I want to make more scraps like the Toy Car<br>
+\* Fixed GiftMimic<br>
+
 ## 1.13.0
 
 \+ Added Toy Car<br>
