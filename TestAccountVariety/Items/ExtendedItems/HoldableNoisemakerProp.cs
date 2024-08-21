@@ -1,14 +1,39 @@
 using Unity.Netcode;
+using UnityEngine;
 
 namespace TestAccountVariety.Items.ExtendedItems;
 
 public class HoldableNoisemakerProp : NoisemakerProp {
+    public float currentLoudness;
+
+    public float nextAudibleNoise;
+
     public override void Update() {
         base.Update();
 
         if (!noiseAudio.isPlaying) return;
 
+        nextAudibleNoise -= Time.deltaTime;
+
+        if (nextAudibleNoise <= 0) {
+            RoundManager.Instance.PlayAudibleNoise(transform.position, noiseRange, currentLoudness, 0,
+                                                   isInElevator && StartOfRound.Instance.hangarDoorsClosed);
+            nextAudibleNoise = .5F;
+        }
+
         currentUseCooldown = useCooldown;
+    }
+
+    public override void PocketItem() {
+        StopSoundServerRpc();
+
+        base.PocketItem();
+    }
+
+    public override void DiscardItem() {
+        StopSoundServerRpc();
+
+        base.DiscardItem();
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true) {
@@ -63,8 +88,10 @@ public class HoldableNoisemakerProp : NoisemakerProp {
         noiseAudioFar.pitch = pitch;
         noiseAudioFar.Play();
 
-        //WalkieTalkie.TransmitOneShotAudio(noiseAudio, noiseSFX[index], loudness);
-        RoundManager.Instance.PlayAudibleNoise(transform.position, noiseRange, loudness, 0, isInElevator && StartOfRound.Instance.hangarDoorsClosed);
+        currentLoudness = loudness;
+
+        RoundManager.Instance.PlayAudibleNoise(transform.position, noiseRange, currentLoudness, 0,
+                                               isInElevator && StartOfRound.Instance.hangarDoorsClosed);
 
         if (minLoudness < 0.6000000238418579 || playerHeldBy == null) return;
         playerHeldBy.timeSinceMakingLoudNoise = 0.0f;
