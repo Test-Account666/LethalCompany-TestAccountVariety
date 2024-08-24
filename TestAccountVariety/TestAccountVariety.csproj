@@ -5,7 +5,7 @@
         <AssemblyName>TestAccount666.TestAccountVariety</AssemblyName>
         <Product>TestAccountVariety</Product>
         <!-- Change to whatever version you're currently on. -->
-        <Version>1.15.0</Version>
+        <Version>1.15.1</Version>
         <Description>Random stuff from TestAccount</Description>
         <Source>https://github.com/Test-Account666/LethalCompany-TestAccountVariety/</Source>
     </PropertyGroup>
