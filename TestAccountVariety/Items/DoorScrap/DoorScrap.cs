@@ -56,29 +56,18 @@ public class DoorScrap : GrabbableObject {
                 fancyDoorArt.SetActive(false);
                 mineDoorArt.SetActive(false);
                 steelDoorArt.SetActive(true);
-
-                itemProperties.toolTips = [
-                ];
                 break;
             }
             case "YellowMineDoor": {
                 steelDoorArt.SetActive(false);
                 fancyDoorArt.SetActive(false);
                 mineDoorArt.SetActive(true);
-
-                itemProperties.toolTips = [
-                    "WHY WOULD IT BLOCK MY SIGHT?!",
-                ];
                 break;
             }
             case "FancyDoor": {
                 steelDoorArt.SetActive(false);
                 mineDoorArt.SetActive(false);
                 fancyDoorArt.SetActive(true);
-
-                itemProperties.toolTips = [
-                    "WHY WOULD IT BLOCK MY SIGHT?!",
-                ];
                 break;
             }
         }

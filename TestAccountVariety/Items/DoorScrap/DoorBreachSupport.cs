@@ -32,7 +32,7 @@ public static class DoorBreachSupport {
         doorScrap.transform.rotation = Quaternion.Euler(doorScrap.itemProperties.restingRotation);
         doorScrap.fallTime = 0.0f;
 
-        doorScrap.scrapValue = random.NextInt(itemProperties.minValue, itemProperties.maxValue);
+        doorScrap.scrapValue = random.NextInt((int) (itemProperties.minValue * .4), (int) (itemProperties.maxValue * .4));
 
 
         var doorType = "SteelDoor";
