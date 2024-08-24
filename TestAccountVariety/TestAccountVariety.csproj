@@ -70,9 +70,12 @@
         <NetcodePatch Include="$(TargetPath)"/>
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="TestAccount666.TestAccountCore">
-        <HintPath>..\include\TestAccountCore.dll</HintPath>
-      </Reference>
+        <Reference Include="TestAccount666.TestAccountCore">
+            <HintPath>..\include\TestAccountCore.dll</HintPath>
+        </Reference>
+        <Reference Include="TestAccount666.DoorBreach">
+            <HintPath>..\include\DoorBreach.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Patches\" />

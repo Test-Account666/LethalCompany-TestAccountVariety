@@ -4,11 +4,13 @@ using BepInEx.Logging;
 using HarmonyLib;
 using TestAccountCore.Dependencies;
 using TestAccountCore.Dependencies.Compatibility;
+using TestAccountVariety.Items.ThrowableCube.Patches;
 using static TestAccountCore.AssetLoader;
 using static TestAccountCore.Netcode;
 
 namespace TestAccountVariety;
 
+[BepInDependency("TestAccount666.DoorBreach", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("evaisa.lethallib")]
 [BepInDependency("TestAccount666.TestAccountCore", "1.4.0")]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -22,7 +24,7 @@ public class TestAccountVariety : BaseUnityPlugin {
 
         Logger.LogDebug("Patching...");
 
-        Harmony.PatchAll();
+        Harmony.PatchAll(typeof(ThrowableCubePatch));
 
         Logger.LogDebug("Finished patching!");
     }
@@ -44,6 +46,7 @@ public class TestAccountVariety : BaseUnityPlugin {
         LoadBundle(assembly, "TestAccountVariety");
         LoadItems(Config);
         LoadHazards(Config);
+        LoadCustomScripts(Config);
 
         VarietyConfig.Initialize(Config);
 
