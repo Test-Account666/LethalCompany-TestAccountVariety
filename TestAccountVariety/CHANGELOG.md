@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.15.0
+
+\+ Added Door Scrap that spawns when breaking doors with DoorBreach<br>
+\* Fixed Alexandria Doll being out of focus while holding<br>
+\# Changed Pikachu holding animation<br>
+
 ## 1.14.2
 
 \* Fix typo in Changelogs<br>
