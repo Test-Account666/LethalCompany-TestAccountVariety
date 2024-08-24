@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.15.1
+
+\* Fixed issue with DoorScrap<br>
+
 ## 1.15.0
 
 \+ Added Door Scrap that spawns when breaking doors with DoorBreach<br>
