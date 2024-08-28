@@ -28,6 +28,20 @@ public class CleaningDroneToy : GrabbableObject {
         gasCoroutine = StartCoroutine(GasEveryone());
     }
 
+    public override void DiscardItem() {
+        StopSoundServerRpc();
+        if (gasCoroutine != null) StopCoroutine(gasCoroutine);
+
+        base.DiscardItem();
+    }
+
+    public override void PocketItem() {
+        StopSoundServerRpc();
+        if (gasCoroutine != null) StopCoroutine(gasCoroutine);
+
+        base.PocketItem();
+    }
+
     public IEnumerator GasEveryone() {
         var position = transform.position;
 

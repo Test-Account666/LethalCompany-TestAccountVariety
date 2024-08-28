@@ -13,6 +13,8 @@ public class GiftMimic : NetworkBehaviour {
         "Present", "Haha Box",
     ];
 
+    public string? variationName;
+
     private Random _random;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -20,14 +22,23 @@ public class GiftMimic : NetworkBehaviour {
 
     public AudioClip audioClip;
 
-    public MeshRenderer meshRenderer;
-
     public InteractTrigger interactTrigger;
 
     public ParticleSystem particleSystem;
 
     public ScanNodeProperties scanNodeProperties;
+
+    public GameObject mapRadarPlane;
+
+    public GameObject giftBoxArt;
+    public GameObject giftBoxArtAlternate;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+    public override void OnNetworkSpawn() {
+        base.OnNetworkSpawn();
+
+        SyncGiftBoxArtServerRpc();
+    }
 
     private void Awake() {
         var currentPosition = transform.position;
@@ -99,7 +110,10 @@ public class GiftMimic : NetworkBehaviour {
 
         particleSystem.Play();
 
-        meshRenderer.enabled = false;
+        mapRadarPlane.SetActive(false);
+
+        giftBoxArt.SetActive(false);
+        giftBoxArtAlternate.SetActive(false);
 
         //For some reason, interactTrigger can be null here...
         if (interactTrigger) {
@@ -108,5 +122,31 @@ public class GiftMimic : NetworkBehaviour {
         }
 
         scanNodeProperties.gameObject.SetActive(false);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncGiftBoxArtServerRpc() {
+        if (string.IsNullOrWhiteSpace(variationName)) {
+            var random = new System.Random();
+            var generatedChance = random.Next(1, 100);
+
+            variationName = generatedChance > VarietyConfig.giftMimicAlternativeVariantChance.Value? "Normal" : "Upturned";
+        }
+
+        SyncGiftBoxArtClientRpc(variationName);
+    }
+
+    [ClientRpc]
+    public void SyncGiftBoxArtClientRpc(string variation) {
+        switch (variation) {
+            case "Normal":
+                giftBoxArt.SetActive(true);
+                giftBoxArtAlternate.SetActive(false);
+                break;
+            case "Upturned":
+                giftBoxArt.SetActive(false);
+                giftBoxArtAlternate.SetActive(true);
+                break;
+        }
     }
 }
