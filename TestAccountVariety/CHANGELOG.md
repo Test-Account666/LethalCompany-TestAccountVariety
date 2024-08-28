@@ -1,5 +1,15 @@
 # TestAccountVariety
 
+## 1.16.0
+
+\+ Added Eva Scrap (Don't worry... Animation and Sounds will be reworked)<br>
+\+ Added Shiba Plush Scrap<br>
+\+ Added Blue Variant for Gift Mimic<br>
+\* Fixed Cleaning Drone Toy permanently spitting out gas<br>
+\* Fixed issue with Ship Toy<br>
+\# Pikachu has now a more metallic look<br>
+\# Optimized the AssetBundle<br>
+
 ## 1.15.2
 
 \# Made the DoorScrap meshes readable<br>
