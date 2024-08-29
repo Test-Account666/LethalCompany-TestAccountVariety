@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.16.1
+
+\* Fixed issue with Shiba Plush<br>
+
 ## 1.16.0
 
 \+ Added Eva Scrap (Don't worry... Animation and Sounds will be reworked)<br>
