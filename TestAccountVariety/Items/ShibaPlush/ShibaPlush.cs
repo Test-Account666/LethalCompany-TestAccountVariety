@@ -16,6 +16,12 @@ public class ShibaPlush : NoisemakerProp {
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     public override void ItemActivate(bool used, bool buttonDown = true) {
+        if (playerHeldBy == null || !playerHeldBy) return;
+
+        var localPlayer = StartOfRound.Instance.localPlayerController;
+
+        if (playerHeldBy != localPlayer) return;
+
         var random = new Random((uint) (DateTime.Now.Ticks & 0x0000FFFF));
 
         RunActionServerRpc(random.NextInt(0, shibaPlushFunctions.Length));
