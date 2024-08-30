@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.17.0
+
+\# Reworked the Propulsion Mine. Some new animations and textures :)<br>
+
 ## 1.16.1
 
 \* Fixed issue with Shiba Plush<br>
