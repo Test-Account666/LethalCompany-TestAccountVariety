@@ -5,7 +5,7 @@ using Random = Unity.Mathematics.Random;
 
 namespace TestAccountVariety.Items.DoorScrap;
 
-public class DoorScrap : GrabbableObject {
+public class DoorScrap : Shovel {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public GameObject steelDoorArt;
     public GameObject fancyDoorArt;
