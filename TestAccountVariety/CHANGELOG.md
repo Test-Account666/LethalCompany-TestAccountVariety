@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.19.0
+
+\* Updated Lunx Painting texture<br>
+\* Fixed a few issues \- probably, maybe, possibly<br>
+\# Project now references v64. I had to re-do a lot of things, so please contact me about issues<br>
+
 ## 1.18.0
 
 \+ Doors can do WHAT now?!<br>
