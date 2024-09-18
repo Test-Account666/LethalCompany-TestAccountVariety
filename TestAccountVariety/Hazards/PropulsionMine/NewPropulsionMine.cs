@@ -64,6 +64,9 @@ public class NewPropulsionMine : PropulsionMine {
         lightObject.SetActive(false);
         light.enabled = false;
 
+        buttonMeshRenderer.material = defaultMaterial;
+        buttonMeshRenderer.sharedMaterial = defaultMaterial;
+
         yield return PlayBeeps();
     }
 
