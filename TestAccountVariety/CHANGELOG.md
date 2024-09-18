@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.20.0
+
+\* Fixed DoorBreach Support<br>
+\* Fixed Ship Toy having insanely bright light (again...)<br>
+\* Fixed propulsion mine bleeps<br>
+
 ## 1.19.0
 
 \* Updated Lunx Painting texture<br>
