@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.21.0
+
+\* Fixed Gift Mimic not registering<br>
+\* Fixed Gift Mimic not being interactable<br>
+\* Fixed Prison Mine layers<br>
+
 ## 1.20.0
 
 \* Fixed DoorBreach Support<br>
