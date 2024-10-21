@@ -7,6 +7,7 @@ internal static class VarietyConfig {
     public static ConfigEntry<int> yippeeParticleChance = null!;
     public static ConfigEntry<bool> giftMimicSpawnsOutsideEnemies = null!;
     public static ConfigEntry<int> giftMimicAlternativeVariantChance = null!;
+    public static ConfigEntry<bool> fixTwoHandedWeapons = null!;
 
     public static void Initialize(ConfigFile configFile) {
         cubeExplodeChance = configFile.Bind("Cube", "6. Cube Explode Chance", 50, "Chance for the cube to explode.");
@@ -17,5 +18,9 @@ internal static class VarietyConfig {
                                                                 "Defines the chance for the Gift Mimic to use an alternative texture."
                                                               + " Best when combined with UpturnedVariety.",
                                                                 new AcceptableValueRange<int>(0, 100)));
+
+        fixTwoHandedWeapons = configFile.Bind("Bug Fixes", "Fix Two Handed Weapons", true, "If set to true, will fix the two Handed Weapons. "
+                                                                                         + "If you swing a two Handed Weapon, you can switch to a different item. "
+                                                                                         + "This option prevents this behavior.");
     }
 }
