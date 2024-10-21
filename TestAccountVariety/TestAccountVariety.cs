@@ -5,6 +5,7 @@ using HarmonyLib;
 using TestAccountCore.Dependencies;
 using TestAccountCore.Dependencies.Compatibility;
 using TestAccountVariety.Items.ThrowableCube.Patches;
+using TestAccountVariety.Patches;
 using static TestAccountCore.AssetLoader;
 using static TestAccountCore.Netcode;
 
@@ -25,6 +26,7 @@ public class TestAccountVariety : BaseUnityPlugin {
         Logger.LogDebug("Patching...");
 
         Harmony.PatchAll(typeof(ThrowableCubePatch));
+        Harmony.PatchAll(typeof(ShovelPatch));
 
         Logger.LogDebug("Finished patching!");
     }
