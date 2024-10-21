@@ -10,7 +10,8 @@ cp -f "$CURRENT_PROJECT"/CHANGELOG.md BuildOutput/ &&
 cp -f "$CURRENT_PROJECT"/icon.png BuildOutput/ &&
 cp -f LICENSE BuildOutput/ &&
 cp -f Assets/TestAccountVariety BuildOutput/BepInEx/plugins/TestAccount666-"$CURRENT_PROJECT"/ &&
-cp -f TestAccountVariety.cosmetics BuildOutput/BepInEx/plugins/TestAccount666-"$CURRENT_PROJECT"/MoreCompanyCosmetics/ &&
+cp -f TestAccountVariety1.cosmetics BuildOutput/BepInEx/plugins/TestAccount666-"$CURRENT_PROJECT"/MoreCompanyCosmetics/ &&
+cp -f TestAccountVariety2.cosmetics BuildOutput/BepInEx/plugins/TestAccount666-"$CURRENT_PROJECT"/MoreCompanyCosmetics/ &&
 ./generate_manifest.sh &&
 ./generate_zipfile.sh &&
 dolphin "./BuildOutput"
