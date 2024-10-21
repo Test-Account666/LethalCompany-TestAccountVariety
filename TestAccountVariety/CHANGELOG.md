@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.22.0
+
+\+ Added config option to fix two-handed weapons<br>
+\+ Added new cosmetics :3<br>
+
 ## 1.21.0
 
 \* Fixed Gift Mimic not registering<br>
