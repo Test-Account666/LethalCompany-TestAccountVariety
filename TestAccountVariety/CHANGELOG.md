@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.22.1
+
+\* Fixed Ship Toy Textures<br>
+
 ## 1.22.0
 
 \+ Added config option to fix two-handed weapons<br>
