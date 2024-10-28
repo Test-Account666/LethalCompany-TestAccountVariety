@@ -17,8 +17,8 @@ public class TzpFogZone : MonoBehaviour {
 
         if (collider.bounds.Contains(controller.playerEye.position)) {
             controller.increasingDrunknessThisFrame = true;
-            var drunknessInertia = controller.drunknessInertia + Time.fixedDeltaTime / 0.25f * controller.drunknessSpeed;
-            controller.drunknessInertia = Mathf.Clamp(drunknessInertia, 0.1f, 4.5f);
+            var drunknessInertia = controller.drunknessInertia + Time.fixedDeltaTime / 0.25f * controller.drunknessSpeed / 2F;
+            controller.drunknessInertia = Mathf.Clamp(drunknessInertia, 0.05f, 4.5f);
         }
 
         _stopwatch += Time.fixedDeltaTime;
