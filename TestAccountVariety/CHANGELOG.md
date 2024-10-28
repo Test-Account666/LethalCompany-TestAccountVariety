@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.23.1
+
+\* Fixed stone decor not being moveable<br>
+\# Nerfed Cleaning Drone Toy<br>
+
 ## 1.23.0
 
 \+ Added an unlockable<br>
