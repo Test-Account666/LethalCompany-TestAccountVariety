@@ -48,6 +48,7 @@ public class TestAccountVariety : BaseUnityPlugin {
         LoadBundle(assembly, "TestAccountVariety");
         LoadItems(Config);
         LoadHazards(Config);
+        LoadUnlockables(Config);
         LoadCustomScripts(Config);
 
         VarietyConfig.Initialize(Config);
