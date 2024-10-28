@@ -13,7 +13,7 @@ namespace TestAccountVariety;
 
 [BepInDependency("TestAccount666.DoorBreach", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("evaisa.lethallib")]
-[BepInDependency("TestAccount666.TestAccountCore", "1.7.0")]
+[BepInDependency("TestAccount666.TestAccountCore", "1.9.0")]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class TestAccountVariety : BaseUnityPlugin {
     public static TestAccountVariety Instance { get; private set; } = null!;
