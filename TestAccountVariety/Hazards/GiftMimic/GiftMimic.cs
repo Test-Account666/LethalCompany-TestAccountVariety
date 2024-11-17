@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
@@ -78,6 +79,11 @@ public class GiftMimic : NetworkBehaviour {
         ];
 
         if (VarietyConfig.giftMimicSpawnsOutsideEnemies.Value) spawnableEnemies.AddRange(StartOfRound.Instance.currentLevel.OutsideEnemies);
+
+        var blackList = VarietyConfig.giftMimicEnemyBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
+
+        spawnableEnemies.RemoveAll(enemy => blackList.Any(blackListedEnemy =>
+                                                              enemy.enemyType.enemyName.ToLower().StartsWith(blackListedEnemy.ToLower())));
 
         while (true) {
             yield return new WaitForEndOfFrame();

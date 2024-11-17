@@ -7,6 +7,7 @@ internal static class VarietyConfig {
     public static ConfigEntry<int> yippeeParticleChance = null!;
     public static ConfigEntry<bool> giftMimicSpawnsOutsideEnemies = null!;
     public static ConfigEntry<int> giftMimicAlternativeVariantChance = null!;
+    public static ConfigEntry<string> giftMimicEnemyBlacklist = null!;
     public static ConfigEntry<bool> fixTwoHandedWeapons = null!;
 
     public static void Initialize(ConfigFile configFile) {
@@ -18,6 +19,8 @@ internal static class VarietyConfig {
                                                                 "Defines the chance for the Gift Mimic to use an alternative texture."
                                                               + " Best when combined with UpturnedVariety.",
                                                                 new AcceptableValueRange<int>(0, 100)));
+        giftMimicEnemyBlacklist = configFile.Bind("Gift Mimic", "5. Enemy Blacklist", "example1, example2", "A comma separated list of blacklisted enemies. "
+                                                                                        + "Uses startsWith, so you don't need the full name.");
 
         fixTwoHandedWeapons = configFile.Bind("Bug Fixes", "Fix Two Handed Weapons", true, "If set to true, will fix the two Handed Weapons. "
                                                                                          + "If you swing a two Handed Weapon, you can switch to a different item. "
