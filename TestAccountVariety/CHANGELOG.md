@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.24.0
+
+\+ Added enemy blacklist for Gift Mimic<br>
+
 ## 1.23.1
 
 \* Fixed stone decor not being moveable<br>
