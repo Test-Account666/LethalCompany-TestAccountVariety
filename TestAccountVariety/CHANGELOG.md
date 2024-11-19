@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.25.0
+
+\+ Added Battery<br>
+\# Finally adjusted Readme<br>
+
 ## 1.24.0
 
 \+ Added enemy blacklist for Gift Mimic<br>
