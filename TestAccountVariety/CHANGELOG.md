@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.26.0
+
+\+ Added Dice<br>
+\* Fixed Door Scrap drop rotation<br>
+\# Slightly reduced Asset Bundle size<br>
+
 ## 1.25.0
 
 \+ Added Battery<br>
