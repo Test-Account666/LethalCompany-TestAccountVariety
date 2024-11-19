@@ -15,8 +15,12 @@ Currently, adds:
 - Lunx Painting
 - Alexandria Doll (Lunxara)
 - Pepsi Can
+- Toy Car
 - Corn
 - [Cleaning Drone Toy (Moonswept)](https://thunderstore.io/c/lethal-company/p/MoonsweptTeam/Moonswept/)
+- Door ([Door Breach](https://thunderstore.io/c/lethal-company/p/TestAccount666/DoorBreach/))
+- Shiba Plush
+- Battery
 
 </details>
 
@@ -30,10 +34,18 @@ Currently, adds:
 </details>
 
 <details>
+<summary>Decor</summary>
+
+- Stone
+
+</details>
+
+<details>
 <summary>Cosmetics (MoreCompany)</summary>
 
 - Shoulder Cube
 - Cube Head
 - Ship Hat
+- Pikachu Hat
 
 </details>
