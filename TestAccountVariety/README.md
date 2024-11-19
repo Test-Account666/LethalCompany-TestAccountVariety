@@ -21,6 +21,7 @@ Currently, adds:
 - Door ([Door Breach](https://thunderstore.io/c/lethal-company/p/TestAccount666/DoorBreach/))
 - Shiba Plush
 - Battery
+- Dice
 
 </details>
 
