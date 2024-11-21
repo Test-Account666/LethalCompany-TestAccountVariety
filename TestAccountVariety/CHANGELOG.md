@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.28.0
+
+\+ Added chance to spawn scrap to Gift Mimic<br>
+\* Fixed monitor<br>
+
 ## 1.27.0
 
 \+ Added Monitor<br>
