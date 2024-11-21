@@ -22,6 +22,7 @@ Currently, adds:
 - Shiba Plush
 - Battery
 - Dice
+- Monitor
 
 </details>
 
