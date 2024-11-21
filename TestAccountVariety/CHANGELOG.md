@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.27.0
+
+\+ Added Monitor<br>
+\* Fixed all Noisemakers<br>
+\# Slightly reduced Asset bundle size again<br>
+
 ## 1.26.0
 
 \+ Added Dice<br>
