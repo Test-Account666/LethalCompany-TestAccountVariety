@@ -68,12 +68,66 @@ public class GiftMimic : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     public void OpenGiftServerRpc() {
-        StartCoroutine(SpawnEnemy(1F));
+        StartCoroutine(SpawnEnemyOrScrap(1F));
+    }
+
+    public IEnumerator SpawnEnemyOrScrap(float timeOut) {
+        _random = new((uint) (DateTime.Now.Ticks & 0x0000FFFF));
+
+        var rolledChance = _random.NextInt(0, 100);
+
+        yield return rolledChance < VarietyConfig.giftMimicScrapChance.Value? SpawnScrap(timeOut) : SpawnEnemy(timeOut);
+    }
+
+    public IEnumerator SpawnScrap(float timeOut) {
+        List<SpawnableItemWithRarity> spawnableItems = [
+            ..StartOfRound.Instance.currentLevel.spawnableScrap,
+        ];
+
+        var blackList = VarietyConfig.giftMimicScrapBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
+
+        spawnableItems.RemoveAll(scrap => blackList.Any(blackListedScrap =>
+                                                            scrap.spawnableItem.itemName.ToLower().StartsWith(blackListedScrap.ToLower())));
+
+        while (true) {
+            yield return new WaitForEndOfFrame();
+
+            timeOut -= Time.deltaTime;
+
+            if (timeOut <= 0) {
+                TestAccountVariety.Logger.LogFatal("Failed to spawn scrap from Gift Mimic! Are scraps available?");
+                yield break;
+            }
+
+            var spawnIndex = _random.NextInt(0, spawnableItems.Count);
+
+            var spawnableItem = spawnableItems[spawnIndex];
+
+            if (spawnableItem.rarity <= 0) continue;
+
+            var spawnPosition = transform.position + transform.up * 2;
+
+            var itemProperties = spawnableItem.spawnableItem;
+
+            var itemObject = Instantiate(itemProperties.spawnPrefab, spawnPosition, Quaternion.identity,
+                                         RoundManager.Instance.spawnedScrapContainer);
+            var grabbableObject = itemObject.GetComponent<GrabbableObject>();
+            grabbableObject.transform.rotation = Quaternion.Euler(grabbableObject.itemProperties.restingRotation);
+            grabbableObject.fallTime = 0.0f;
+            grabbableObject.scrapValue =
+                (int) (_random.NextInt(itemProperties.minValue, itemProperties.maxValue) * RoundManager.Instance.scrapValueMultiplier);
+
+            var networkObject = itemObject.GetComponent<NetworkObject>();
+            networkObject.Spawn();
+
+            grabbableObject.SetScrapValue(grabbableObject.scrapValue);
+            break;
+        }
+
+        OpenGiftClientRpc();
     }
 
     public IEnumerator SpawnEnemy(float timeOut) {
-        _random = new((uint) (DateTime.Now.Ticks & 0x0000FFFF));
-
         List<SpawnableEnemyWithRarity> spawnableEnemies = [
             ..StartOfRound.Instance.currentLevel.Enemies,
         ];
