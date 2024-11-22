@@ -10,6 +10,7 @@ internal static class VarietyConfig {
     public static ConfigEntry<string> giftMimicEnemyBlacklist = null!;
     public static ConfigEntry<int> giftMimicScrapChance = null!;
     public static ConfigEntry<string> giftMimicScrapBlacklist = null!;
+    public static ConfigEntry<int> bombExplodeChance = null!;
     public static ConfigEntry<bool> fixTwoHandedWeapons = null!;
 
     public static void Initialize(ConfigFile configFile) {
@@ -30,6 +31,8 @@ internal static class VarietyConfig {
         giftMimicScrapBlacklist = configFile.Bind("Gift Mimic", "7. Scrap Blacklist", "example1, example2",
                                                   "A comma separated list of blacklisted scraps. "
                                                 + "Uses startsWith, so you don't need the full name.");
+
+        bombExplodeChance = configFile.Bind("Bomb", "6. Bomb Explode Chance", 4, "Chance for the bomb to explode on drop.");
 
         fixTwoHandedWeapons = configFile.Bind("Bug Fixes", "Fix Two Handed Weapons", true, "If set to true, will fix the two Handed Weapons. "
                                                                                          + "If you swing a two Handed Weapon, you can switch to a different item. "
