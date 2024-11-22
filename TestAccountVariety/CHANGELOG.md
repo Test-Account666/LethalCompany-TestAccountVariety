@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.29.0
+
+\+ Added throwable bomb<br>
+
 ## 1.28.0
 
 \+ Added chance to spawn scrap to Gift Mimic<br>
