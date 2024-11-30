@@ -10,8 +10,8 @@ namespace TestAccountVariety.Hazards.GiftMimic;
 
 public class GiftMimic : NetworkBehaviour {
     public static readonly List<string> PossibleNames = [
-        "Giftt", "Gift Boxx", "Git Box", "Git", "Lunx Box", "Lunch", "Lunch Box", "Don't Touch", "GIFT BOX", "gift box", "Webley Box", "Git Hub",
-        "Present", "Haha Box",
+        "Giftt", "Gift Boxx", "Git Box", "Git", "Lunx Box", "Lunch", "Lunch Box", "Don't Touch", "GIFT BOX", "gift box", "Webley Box", "Git Hub", "Present",
+        "Haha Box",
     ];
 
     public string? variationName;
@@ -24,6 +24,7 @@ public class GiftMimic : NetworkBehaviour {
     public AudioClip audioClip;
 
     public InteractTrigger interactTrigger;
+    public BoxCollider interactCollider;
 
     public ParticleSystem particleSystem;
 
@@ -179,6 +180,7 @@ public class GiftMimic : NetworkBehaviour {
         if (interactTrigger) {
             interactTrigger.interactable = false;
             interactTrigger.enabled = false;
+            interactCollider.enabled = false;
         }
 
         scanNodeProperties.gameObject.SetActive(false);
