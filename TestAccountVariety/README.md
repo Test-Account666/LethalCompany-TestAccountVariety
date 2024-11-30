@@ -23,6 +23,14 @@ Currently, adds:
 - Battery
 - Dice
 - Monitor
+- Colored throwable cubes
+
+</details>
+
+<details>
+<summary>Shop Items</summary>
+
+- Telepad
 
 </details>
 
