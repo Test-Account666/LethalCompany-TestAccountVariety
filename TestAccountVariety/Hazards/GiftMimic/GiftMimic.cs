@@ -74,7 +74,7 @@ public class GiftMimic : NetworkBehaviour {
     public IEnumerator SpawnEnemyOrScrap(float timeOut) {
         _random = new((uint) (DateTime.Now.Ticks & 0x0000FFFF));
 
-        var rolledChance = _random.NextInt(0, 100);
+        var rolledChance = _random.NextInt(1, 100);
 
         yield return rolledChance < VarietyConfig.giftMimicScrapChance.Value? SpawnScrap(timeOut) : SpawnEnemy(timeOut);
     }
