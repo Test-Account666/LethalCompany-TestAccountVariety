@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.30.2
+
+\* Fixed GiftMimic interact trigger blocking item grab<br>
+
 ## 1.30.1
 
 \* Fixed colored cubes<br>
