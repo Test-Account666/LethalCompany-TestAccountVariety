@@ -1,5 +1,13 @@
 # TestAccountVariety
 
+## 1.30.0
+
+\+ Added colored cubes. They have a random size and color<br>
+\+ Added Telepad. You can buy them in the store<br>
+\* Fixed throw destination for all cubes being slightly inside the ground<br>
+\* Fixed GiftMimic scrap spawn chance of 0% still spawning scrap<br>
+\* Fixed DoorBreach Support debug message being on the wrong log level<br>
+
 ## 1.29.0
 
 \+ Added throwable bomb<br>
