@@ -71,4 +71,27 @@ public class ThrowableCube : StunGrenadeItem {
         itemAudio.PlayOneShot(explodeSFX);
         WalkieTalkie.TransmitOneShotAudio(itemAudio, explodeSFX);
     }
+
+    public new Vector3 GetGrenadeThrowDestination() {
+        const float maxDistance = 15f;
+
+        var gameplayCameraTransform = playerHeldBy.gameplayCamera.transform;
+
+        var startPosition = gameplayCameraTransform.position;
+        var forward = gameplayCameraTransform.forward;
+
+        // Handle edge case when looking straight down
+        if (forward.y <= -0.9f) startPosition += -forward;
+
+        var hitObject = Physics.Raycast(startPosition, forward, out var hit, maxDistance, stunGrenadeMask);
+
+        var endPosition = hitObject? hit.point : startPosition + forward * maxDistance;
+
+        var hitGround = Physics.Raycast(new(endPosition + Vector3.up, Vector3.down), out var groundHit, 100, stunGrenadeMask);
+
+        if (hitGround) return groundHit.point + new Vector3(0, itemProperties.verticalOffset, 0);
+
+        TestAccountVariety.Logger.LogError($"{playerHeldBy.playerUsername} cube couldn't find ground!");
+        return endPosition;
+    }
 }
