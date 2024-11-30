@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.30.1
+
+\* Fixed colored cubes<br>
+
 ## 1.30.0
 
 \+ Added colored cubes. They have a random size and color<br>
