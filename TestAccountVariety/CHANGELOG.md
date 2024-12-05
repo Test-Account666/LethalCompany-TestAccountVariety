@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.31.0
+
+\+ Added Hypercube<br>
+\* Fixed funny interaction with Imperium<br>
+\# Rewrote Telepad. Should work properly now<br>
+
 ## 1.30.2
 
 \* Fixed GiftMimic interact trigger blocking item grab<br>
