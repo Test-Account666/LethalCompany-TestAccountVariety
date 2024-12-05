@@ -1,4 +1,5 @@
 using System;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +8,8 @@ using Random = Unity.Mathematics.Random;
 namespace TestAccountVariety.Items.ThrowableCube;
 
 public class ThrowableCube : StunGrenadeItem {
+    public float physicsForce = 45F;
+
     private static InputAction? _interactInputAction;
     private static InputAction? _discardInputAction;
     private const float KILL_RANGE = 1F;
@@ -62,8 +65,11 @@ public class ThrowableCube : StunGrenadeItem {
 
         if (!explode) return;
 
-        Landmine.SpawnExplosion(transform.position + Vector3.up * 0.2f, killRange: KILL_RANGE, damageRange: DAMAGE_RANGE, nonLethalDamage: 40,
-                                physicsForce: 45f);
+        var explosionPosition = transform.position + Vector3.up * 0.2f;
+
+        Landmine.SpawnExplosion(explosionPosition, killRange: KILL_RANGE, damageRange: DAMAGE_RANGE, nonLethalDamage: 40);
+
+        ApplyPhysicsForce(explosionPosition);
 
         var parent = !isInElevator? RoundManager.Instance.mapPropsContainer.transform : StartOfRound.Instance.elevatorTransform;
 
@@ -71,6 +77,45 @@ public class ThrowableCube : StunGrenadeItem {
         itemAudio.PlayOneShot(explodeSFX);
         WalkieTalkie.TransmitOneShotAudio(itemAudio, explodeSFX);
     }
+
+    public void ApplyPhysicsForce(Vector3 explosionPosition) {
+        var localPlayer = StartOfRound.Instance.localPlayerController;
+
+        if (!IsWithinEffectiveRange(localPlayer.transform.position, explosionPosition)) return;
+        if (IsBlockedByObstacle(explosionPosition, localPlayer.transform.position)) return;
+
+        var force = CalculatePhysicsForce(localPlayer.transform.position, explosionPosition);
+        if (force.magnitude <= 2.0) return;
+
+        ApplyForceToLocalPlayer(localPlayer, force);
+    }
+
+    private static bool IsWithinEffectiveRange(Vector3 playerPosition, Vector3 explosionPosition) {
+        var distance = Vector3.Distance(playerPosition, explosionPosition);
+        return distance < 35.0;
+    }
+
+    private static bool IsBlockedByObstacle(Vector3 explosionPosition, Vector3 playerPosition) =>
+        Physics.Linecast(explosionPosition,
+                         playerPosition + Vector3.up * 0.3f,
+                         out var _,
+                         256,
+                         QueryTriggerInteraction.Ignore);
+
+    private Vector3 CalculatePhysicsForce(Vector3 playerPosition, Vector3 explosionPosition) {
+        var distance = Vector3.Distance(playerPosition, explosionPosition);
+        var direction = Vector3.Normalize(playerPosition + Vector3.up * distance - explosionPosition);
+        return direction / (distance * 0.35f) * physicsForce;
+    }
+
+    private static void ApplyForceToLocalPlayer(PlayerControllerB localPlayer, Vector3 force) {
+        if (force.magnitude > 10.0) localPlayer.CancelSpecialTriggerAnimations();
+
+        if (localPlayer.inVehicleAnimation && (localPlayer.externalForceAutoFade + force).magnitude < 50.0) return;
+
+        localPlayer.externalForceAutoFade += force;
+    }
+
 
     public new Vector3 GetGrenadeThrowDestination() {
         const float maxDistance = 15f;
