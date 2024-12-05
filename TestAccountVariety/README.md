@@ -24,6 +24,7 @@ Currently, adds:
 - Dice
 - Monitor
 - Colored throwable cubes
+- Hypercube
 
 </details>
 
