@@ -87,8 +87,7 @@ public class GiftMimic : NetworkBehaviour {
 
         var blackList = VarietyConfig.giftMimicScrapBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
 
-        spawnableItems.RemoveAll(scrap => blackList.Any(blackListedScrap =>
-                                                            scrap.spawnableItem.itemName.ToLower().StartsWith(blackListedScrap.ToLower())));
+        spawnableItems.RemoveAll(scrap => blackList.Any(blackListedScrap => scrap.spawnableItem.itemName.ToLower().StartsWith(blackListedScrap.ToLower())));
 
         while (true) {
             yield return new WaitForEndOfFrame();
@@ -110,13 +109,11 @@ public class GiftMimic : NetworkBehaviour {
 
             var itemProperties = spawnableItem.spawnableItem;
 
-            var itemObject = Instantiate(itemProperties.spawnPrefab, spawnPosition, Quaternion.identity,
-                                         RoundManager.Instance.spawnedScrapContainer);
+            var itemObject = Instantiate(itemProperties.spawnPrefab, spawnPosition, Quaternion.identity, RoundManager.Instance.spawnedScrapContainer);
             var grabbableObject = itemObject.GetComponent<GrabbableObject>();
             grabbableObject.transform.rotation = Quaternion.Euler(grabbableObject.itemProperties.restingRotation);
             grabbableObject.fallTime = 0.0f;
-            grabbableObject.scrapValue =
-                (int) (_random.NextInt(itemProperties.minValue, itemProperties.maxValue) * RoundManager.Instance.scrapValueMultiplier);
+            grabbableObject.scrapValue = (int) (_random.NextInt(itemProperties.minValue, itemProperties.maxValue) * RoundManager.Instance.scrapValueMultiplier);
 
             var networkObject = itemObject.GetComponent<NetworkObject>();
             networkObject.Spawn();
@@ -137,8 +134,7 @@ public class GiftMimic : NetworkBehaviour {
 
         var blackList = VarietyConfig.giftMimicEnemyBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
 
-        spawnableEnemies.RemoveAll(enemy => blackList.Any(blackListedEnemy =>
-                                                              enemy.enemyType.enemyName.ToLower().StartsWith(blackListedEnemy.ToLower())));
+        spawnableEnemies.RemoveAll(enemy => blackList.Any(blackListedEnemy => enemy.enemyType.enemyName.ToLower().StartsWith(blackListedEnemy.ToLower())));
 
         while (true) {
             yield return new WaitForEndOfFrame();
