@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using GameNetcodeStuff;
+using TestAccountVariety.Utils;
 using Unity.Netcode;
 using UnityEngine;
-using Random = Unity.Mathematics.Random;
+using Random = System.Random;
 
 namespace TestAccountVariety.ShopItems.Telepad;
 
@@ -23,312 +26,249 @@ public class Telepad : GrabbableObject {
     public Material enabledMaterial;
     public Material disabledMaterial;
 
-    public float nextTeleport;
-    public bool objectBeingPlaced;
+    public float currentTeleportCoolDown;
+
     public bool active;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     private const int _PLAYER_LAYER_MASK = 1 << 3;
 
-    public override void Start() {
-        base.Start();
-
-        SyncActiveStateServerRpc();
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SyncActiveStateServerRpc() {
-        ActivateItemClientRpc(active);
-    }
+    private const float _ACTIVATED_SCALE = .5f;
+    private const float _DEACTIVATED_SCALE = .125f;
 
     public override void Update() {
         base.Update();
 
-        HandleAmbientSound();
-        UpdateCooldown();
+        TickCoolDown();
+        UpdateAmbientSound();
     }
 
-    public void HandleAmbientSound() {
-        if (ShouldPlayAmbientSound()) {
-            if (ambientAudioSource.isPlaying) return;
+    public override void GrabItem() {
+        active = false;
+        UpdateMaterial(false);
+        SetScale(_DEACTIVATED_SCALE);
 
-            PlayAmbientSound();
+        base.GrabItem();
+    }
+
+    public override void ItemActivate(bool used, bool buttonDown = true) {
+        base.ItemActivate(used, buttonDown);
+
+        active = true;
+        SetScale(_ACTIVATED_SCALE);
+
+        if (!isHeld || !playerHeldBy) return;
+
+        var localPlayer = StartOfRound.Instance.localPlayerController;
+
+        if (playerHeldBy != localPlayer) return;
+
+        localPlayer.StartCoroutine(localPlayer.waitToEndOfFrameToDiscard());
+    }
+
+    public void UpdateAmbientSound() {
+        if (!CanTeleport()) {
+            if (!ambientAudioSource.isPlaying) return;
+
+            ambientAudioSource.Stop();
             return;
         }
 
-        ambientAudioSource.Stop();
+        PlayAmbientSound();
     }
 
     public void PlayAmbientSound() {
-        ambientAudioSource.loop = true;
+        if (ambientAudioSource.isPlaying) return;
+
         ambientAudioSource.clip = ambientSound;
+        ambientAudioSource.loop = true;
         ambientAudioSource.Play();
     }
 
-    public void UpdateCooldown() {
-        if (!CanCooldownTick()) return;
-
-        nextTeleport -= Time.deltaTime;
-
-        if (nextTeleport > 0) return;
-
-        SetMaterialState(true);
-    }
-
-    public bool CanBeUsedForTeleport() => nextTeleport <= 0 && CanCooldownTick();
-
-    public bool CanCooldownTick() => !isHeld && active && insertedBattery.charge > 0;
-
-    public bool ShouldPlayAmbientSound() => teleportCollider.enabled && CanBeUsedForTeleport();
-
-    public override void GrabItem() {
-        base.GrabItem();
-
-        SetActiveStateServerRpc(false);
-    }
-
-    public override void DiscardItem() {
-        base.DiscardItem();
-
-        SetActiveStateServerRpc(!objectBeingPlaced);
-        objectBeingPlaced = false;
-    }
-
-    public override void OnPlaceObject() {
-        base.OnPlaceObject();
-
-        objectBeingPlaced = true;
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SetActiveStateServerRpc(bool state) {
-        ActivateItemClientRpc(state);
-    }
-
-    [ClientRpc]
-    public void ActivateItemClientRpc(bool activate) {
-        active = activate;
-        UpdateTelepadState();
-    }
-
-    public void UpdateTelepadState() {
-        ambientAudioSource.Stop();
-        UpdateScale(active? 0.5f : 0.125f);
-        teleportCollider.enabled = active;
-        SetMaterialState(false);
-        ResetCooldown();
-    }
-
-    public void UpdateScale(float scale) => transform.localScale = new(scale, scale, scale);
-
-    public void ResetCooldown() => nextTeleport = teleportationCooldown;
-
-    public void SetMaterialState(bool activate) => meshRenderer.material = activate? enabledMaterial : disabledMaterial;
-
-    [ServerRpc(RequireOwnership = false)]
-    public void TeleportPlayerServerRpc(int playerId) {
-        if (!TryGetPlayer(playerId, out var player)) return;
-
-        var availableTelepads = FindAvailableTelepads();
-
-        if (availableTelepads.Count == 0) {
-            SendWarningClientRpc(playerId, "No teleportation points found.");
+    public void TickCoolDown() {
+        if (!CanCoolDownTick()) {
+            currentTeleportCoolDown = teleportationCooldown;
             return;
         }
 
-        TeleportPlayerToRandomTelepad(player, availableTelepads);
+        if (currentTeleportCoolDown <= 0) return;
+
+        currentTeleportCoolDown -= Time.deltaTime;
+
+        if (currentTeleportCoolDown > 0) return;
+        UpdateMaterial(true);
     }
 
-    public List<Telepad> FindAvailableTelepads() {
-        var telepads = new List<Telepad>(FindObjectsOfType<Telepad>());
-        telepads.RemoveAll(telepad => telepad == this || !telepad.CanBeUsedForTeleport());
-        return telepads;
-    }
+    [ServerRpc(RequireOwnership = false)]
+    public void TeleportPlayerServerRpc(int playerIndex, NetworkObjectReference sourceTelepadReference) {
+        var hasPlayer = TryGetPlayer(playerIndex, out var player);
 
-    public void TeleportPlayerToRandomTelepad(PlayerControllerB player, List<Telepad> telepads) {
-        var random = new Random((uint) DateTime.Now.Ticks);
-        var targetTelepad = telepads[random.NextInt(telepads.Count)];
+        if (!hasPlayer) return;
 
-        var poorPlayerCount = targetTelepad.GetPoorPlayers(out var poorPlayers);
+        var random = new Random((int) (DateTime.Now.Ticks + transform.position.ConvertToInt()));
 
-        HandleTeleportationEffects(player, targetTelepad);
+        var poorPlayers = GetPoorPlayers(player);
 
-        KillPoorPlayers(player, poorPlayers, poorPlayerCount, random);
-    }
+        foreach (var poorPlayer in poorPlayers) {
+            var willObliterate = random.Next(0, 2) > 0;
 
-    public void KillPoorPlayers(PlayerControllerB initiatingPlayer, List<PlayerControllerB> poorPlayers, int poorPlayerCount, Random random) {
-        for (var index = 0; index < poorPlayerCount; index++) {
-            var poorPlayer = poorPlayers[index];
+            if (!willObliterate) {
+                KillPlayerClientRpc(playerIndex);
+                continue;
+            }
 
-            if (random.NextBool()) poorPlayer = initiatingPlayer;
-
-            if (poorPlayer.isPlayerDead || !poorPlayer.isPlayerControlled) continue;
-
-            KillPlayer((int) poorPlayer.playerClientId);
+            KillPlayerClientRpc((int) poorPlayer.playerClientId);
         }
-    }
 
-    public void KillPlayer(int playerId) {
-        KillPlayerClientRpc(playerId);
-
-        if (!TryGetPlayer(playerId, out var player)) return;
-
-        player.KillPlayerServerRpc(playerId, true, Vector3.up, (int) CauseOfDeath.Crushing, 0, Vector3.zero);
+        TeleportPlayerClientRpc(playerIndex, sourceTelepadReference);
     }
 
     [ClientRpc]
-    public void KillPlayerClientRpc(int playerId) {
-        if (!TryGetPlayer(playerId, out var player)) return;
+    public void KillPlayerClientRpc(int playerIndex) {
+        var hasPlayer = TryGetPlayer(playerIndex, out var player);
+
+        if (!hasPlayer) return;
 
         player.KillPlayer(Vector3.up, causeOfDeath: CauseOfDeath.Crushing);
+
+        var deadBody = player.deadBody;
+
+        if (!deadBody) return;
+
+        if (deadBody.bodyParts.Length <= 0) return;
+
+        foreach (var deadBodyBodyPart in deadBody.bodyParts) deadBodyBodyPart.position = teleportationPoint.position;
     }
 
-    public int GetPoorPlayers(out List<PlayerControllerB> players) {
-        players = [
-        ];
-        var playerColliders = new Collider[16];
-        var count = Physics.OverlapSphereNonAlloc(teleportationPoint.position, 1f, playerColliders, _PLAYER_LAYER_MASK);
+    public List<PlayerControllerB> GetPoorPlayers(PlayerControllerB exemptPlayer) {
+        var colliders = new Collider[16];
+        var count = Physics.OverlapSphereNonAlloc(teleportationPoint.position, 2F, colliders, _PLAYER_LAYER_MASK, QueryTriggerInteraction.Ignore);
 
-        if (count <= 0) return 0;
+        return colliders.Take(count).Select(collider => collider.GetComponent<PlayerControllerB>()).Where(player => player && player != exemptPlayer).Distinct()
+                        .ToList();
+    }
 
-        for (var i = 0; i < count; i++) {
-            var collider = playerColliders[i];
-            if (!collider.TryGetComponent(out PlayerControllerB player) || player.isPlayerDead || !player.isPlayerControlled
-             || players.Contains(player)) continue;
 
-            players.Add(player);
+    [ClientRpc]
+    public void TeleportPlayerClientRpc(int playerIndex, NetworkObjectReference sourceTelepadReference) {
+        var hasPlayer = TryGetPlayer(playerIndex, out var player);
+        if (!hasPlayer) return;
+
+        // Local client bypasses RPCs for teleportation
+        var localPlayer = StartOfRound.Instance.localPlayerController;
+        if (player == localPlayer) return;
+
+        var hasSourceTelepad = TryGetTelepad(sourceTelepadReference, out var sourceTelepad);
+
+        if (!hasSourceTelepad) return;
+
+        TeleportOnLocalClient(sourceTelepad, player);
+    }
+
+    public static bool TryGetTelepad(NetworkObjectReference telepadReference, out Telepad telepad) {
+        var networkObject = (NetworkObject) telepadReference;
+
+        if (networkObject) return networkObject.TryGetComponent(out telepad);
+
+        telepad = null!;
+        return false;
+    }
+
+    public static bool TryGetPlayer(int playerIndex, out PlayerControllerB player) {
+        if (playerIndex < 0) {
+            player = null!;
+            return false;
         }
 
-        return players.Count;
+        if (playerIndex >= StartOfRound.Instance.allPlayerScripts.Length) {
+            player = null!;
+            return false;
+        }
+
+        player = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        return player;
     }
 
-    public void HandleTeleportationEffects(PlayerControllerB player, Telepad targetTelepad) {
-        targetTelepad.TeleportPlayerClientRpc((int) player.playerClientId);
+    public static bool TryGetEnemy(NetworkObjectReference enemyReference, out EnemyAI enemyAI) {
+        var networkObject = (NetworkObject) enemyReference;
 
-        ApplyBatteryUsage(targetTelepad);
-        ApplyCooldowns(targetTelepad);
+        if (networkObject) return networkObject.TryGetComponent(out enemyAI);
 
-        PlayTeleportSoundClientRpc();
-        targetTelepad.PlayTeleportSoundClientRpc();
+        enemyAI = null!;
+        return false;
     }
 
-    [ClientRpc]
-    public void PlayTeleportSoundClientRpc() {
-        ambientAudioSource.Stop();
+    public void TeleportOnLocalClient(Telepad sourceTelepad, PlayerControllerB player) {
+        HandlePreTeleport(sourceTelepad);
 
-        teleportAudioSource.PlayOneShot(teleportSound);
-
-        var isInsideClosedShip = isInShipRoom && StartOfRound.Instance.hangarDoorsClosed;
-
-        RoundManager.Instance.PlayAudibleNoise(teleportationPoint.position, noiseIsInsideClosedShip: isInsideClosedShip);
+        StartCoroutine(TeleportPlayer(player));
     }
 
+    public IEnumerator TeleportPlayer(PlayerControllerB player) {
+        yield return new WaitForEndOfFrame();
 
-    [ClientRpc]
-    public void TeleportPlayerClientRpc(int playerId) {
-        if (!TryGetPlayer(playerId, out var player)) return;
-
-        nextTeleport += teleportationCooldown;
         player.DropAllHeldItems();
-        player.TeleportPlayer(teleportationPoint.position);
 
+        yield return null;
+        yield return new WaitForEndOfFrame();
+
+        player.TeleportPlayer(teleportationPoint.position);
         player.isInsideFactory = isInFactory;
         player.isInElevator = isInElevator;
         player.isInHangarShipRoom = isInShipRoom;
     }
 
-    public void ApplyBatteryUsage(Telepad targetTelepad) {
-        ApplyBatteryUsage();
-        targetTelepad.ApplyBatteryUsage();
-    }
-
-    public void ApplyBatteryUsage() {
-        var charge = insertedBattery.charge;
-        var usage = itemProperties.batteryUsage * 100;
-
-        SyncBatteryClientRpc((int) (charge - usage));
-    }
-
-    private void ApplyCooldowns(Telepad targetTelepad) {
-        ApplyCooldownClientRpc();
-        targetTelepad.ApplyCooldownClientRpc();
-    }
-
     [ClientRpc]
-    public void ApplyCooldownClientRpc() {
-        UpdateTelepadState();
+    public void TeleportEnemyClientRpc(NetworkObjectReference sourceTelepadReference, NetworkObjectReference enemyReference) {
+        var hasSourceTelepad = TryGetTelepad(sourceTelepadReference, out var sourceTelepad);
+
+        if (!hasSourceTelepad) return;
+
+        var hasEnemy = TryGetEnemy(enemyReference, out var enemyAI);
+
+        if (!hasEnemy) return;
+
+        HandlePreTeleport(sourceTelepad, VarietyConfig.telepadEnemyUsesPower.Value);
+
+        enemyAI.agent.Warp(teleportationPoint.position);
+        enemyAI.isInsidePlayerShip = isInShipRoom;
+        enemyAI.isOutside = !isInFactory;
     }
 
-    [ClientRpc]
-    public void SendWarningClientRpc(int playerId, string warning) {
-        if (!TryGetPlayer(playerId, out var player)) return;
+    public void HandlePreTeleport(Telepad sourceTelepad, bool ignoreBattery = false) {
+        sourceTelepad.ApplyCoolDown();
 
-        var localPlayer = StartOfRound.Instance.localPlayerController;
-        if (localPlayer != player) return;
+        sourceTelepad.teleportAudioSource.PlayOneShot(teleportSound);
 
-        HUDManager.Instance.DisplayTip("Telepad", warning, true);
+        if (IsHost && !ignoreBattery)
+            sourceTelepad.SyncBatteryClientRpc((int) (sourceTelepad.insertedBattery.charge * 100 - sourceTelepad.itemProperties.batteryUsage * 100));
+
+        ApplyCoolDown();
+
+        teleportAudioSource.PlayOneShot(teleportSound);
+
+        if (IsHost && !ignoreBattery) SyncBatteryClientRpc((int) (insertedBattery.charge * 100 - itemProperties.batteryUsage * 100));
     }
 
-    public static bool TryGetPlayer(int playerId, out PlayerControllerB player) {
-        if (playerId < 0 || playerId >= StartOfRound.Instance.allPlayerScripts.Length) {
-            player = null!;
-            return false;
-        }
+    public List<Telepad> GetAvailableTelepads() {
+        var telepads = FindObjectsByType<Telepad>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 
-        player = StartOfRound.Instance.allPlayerScripts[playerId];
-        return player != null;
+        return telepads.Where(telepad => telepad).Where(telepad => telepad != this && telepad.CanTeleport()).ToList();
     }
 
-    public static bool TryGetEnemy(NetworkObjectReference enemyReference, out EnemyAI enemyAi) {
-        if (!enemyReference.TryGet(out var networkObject)) {
-            Debug.LogWarning("No network object found!");
-            enemyAi = null!;
-            return false;
-        }
-
-        var hasEnemy = networkObject.TryGetComponent(out enemyAi);
-
-        return hasEnemy;
+    public void ApplyCoolDown() {
+        currentTeleportCoolDown = teleportationCooldown;
+        UpdateMaterial(false);
     }
 
+    public void UpdateMaterial(bool activate) => meshRenderer.material = activate? enabledMaterial : disabledMaterial;
 
-    [ServerRpc(RequireOwnership = false)]
-    public void TeleportEnemyServerRpc(NetworkObjectReference enemyReference) {
-        if (!TryGetEnemy(enemyReference, out var _)) return;
+    public bool CanTeleport() => CanCoolDownTick() && currentTeleportCoolDown <= 0;
 
-        var availableTelepads = FindAvailableTelepads();
+    public bool CanCoolDownTick() => active && !isHeld && insertedBattery.charge > 0;
 
-        if (availableTelepads.Count <= 0) {
-            Debug.LogWarning("No teleportation points found.");
-            return;
-        }
-
-        var random = new Random((uint) (DateTime.Now.Ticks & 0x0000FFFF));
-
-        var telepad = availableTelepads[random.NextInt(0, availableTelepads.Count)];
-
-        telepad.TeleportEnemyClientRpc(enemyReference);
-
-        ApplyCooldowns(telepad);
-
-        PlayTeleportSoundClientRpc();
-        telepad.PlayTeleportSoundClientRpc();
-    }
-
-    [ClientRpc]
-    public void TeleportEnemyClientRpc(NetworkObjectReference enemyReference) {
-        if (!TryGetEnemy(enemyReference, out var enemyAi)) return;
-
-        Debug.LogWarning("Teleportation successful!");
-
-        nextTeleport += teleportationCooldown;
-
-        enemyAi.serverPosition = teleportationPoint.position;
-        enemyAi.transform.position = teleportationPoint.position;
-        enemyAi.agent.Warp(teleportationPoint.position);
-
-        if (!IsHost && !IsServer) return;
-
-        enemyAi.SyncPositionToClients();
+    public void SetScale(float newScale) {
+        originalScale = new(newScale, newScale, newScale);
+        transform.localScale = new(newScale, newScale, newScale);
     }
 }

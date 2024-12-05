@@ -1,5 +1,10 @@
+using System;
+using System.Linq;
 using GameNetcodeStuff;
+using TestAccountVariety.Utils;
+using Unity.Netcode;
 using UnityEngine;
+using Random = System.Random;
 
 namespace TestAccountVariety.ShopItems.Telepad;
 
@@ -11,7 +16,7 @@ public class TelepadTrigger : MonoBehaviour {
     public void OnTriggerEnter(Collider other) {
         if (!enabled) return;
 
-        if (!telepad.CanBeUsedForTeleport()) return;
+        if (!telepad.CanTeleport()) return;
 
         var hasPlayer = other.TryGetComponent<PlayerControllerB>(out var player);
 
@@ -28,16 +33,58 @@ public class TelepadTrigger : MonoBehaviour {
 
         if (player != localPlayer) return;
 
-        telepad.TeleportPlayerServerRpc((int) player.playerClientId);
+        var availableTelepads = telepad.GetAvailableTelepads();
+
+        if (availableTelepads.Count <= 0) {
+            HUDManager.Instance.DisplayTip("Telepad", "No teleportation points found!", true);
+            return;
+        }
+
+        availableTelepads.RemoveAll(otherTelepad => Vector3.Distance(otherTelepad.transform.position, telepad.transform.position) <= 5F);
+
+        if (availableTelepads.Count <= 0) {
+            HUDManager.Instance.DisplayTip("Telepad", "Walk, you lazy ass!", true);
+            return;
+        }
+
+        var random = new Random((int) DateTime.Now.Ticks + telepad.teleportationPoint.position.ConvertToInt());
+
+        var targetTelepad = availableTelepads[random.Next(0, availableTelepads.Count)];
+
+        targetTelepad.TeleportOnLocalClient(telepad, player);
+
+        var telepadReference = (NetworkObjectReference) telepad.NetworkObject;
+        targetTelepad.TeleportPlayerServerRpc((int) player.playerClientId, telepadReference);
     }
 
     public void TryHandleEnemyTeleport(Collider other) {
+        if (!VarietyConfig.telepadEnableEnemyTeleport.Value) return;
+
         var hasEnemy = other.TryGetComponent<EnemyAICollisionDetect>(out var collisionDetect);
 
         if (!hasEnemy || !collisionDetect.mainScript) return;
 
-        var networkObject = collisionDetect.mainScript.NetworkObject;
+        var enemyAI = collisionDetect.mainScript;
 
-        telepad.TeleportEnemyServerRpc(networkObject);
+        var blackList = VarietyConfig.telepadEnemyBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
+
+        if (blackList.Any(blacklistedEnemy => enemyAI.enemyType.enemyName.ToLower().StartsWith(blacklistedEnemy.ToLower()))) return;
+
+        var availableTelepads = telepad.GetAvailableTelepads();
+
+        if (availableTelepads.Count <= 0) {
+            TestAccountVariety.Logger.LogDebug("[Enemy] No teleportation points found!");
+            return;
+        }
+
+        var random = new Random((int) DateTime.Now.Ticks);
+
+        var targetTelepad = availableTelepads[random.Next(0, availableTelepads.Count)];
+
+        var networkObject = enemyAI.NetworkObject;
+
+        var telepadReference = (NetworkObjectReference) telepad.NetworkObject;
+
+        targetTelepad.TeleportEnemyClientRpc(telepadReference, (NetworkObjectReference) networkObject);
     }
 }
