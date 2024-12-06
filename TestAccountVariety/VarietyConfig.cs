@@ -21,6 +21,7 @@ internal static class VarietyConfig {
     public static ConfigEntry<bool> telepadEnableEnemyTeleport = null!;
     public static ConfigEntry<string> telepadEnemyBlacklist = null!;
     public static ConfigEntry<bool> telepadEnemyUsesPower = null!;
+    public static ConfigEntry<bool> telepadDropsItems = null!;
 
     public static ConfigEntry<bool> fixTwoHandedWeapons = null!;
 
@@ -68,6 +69,8 @@ internal static class VarietyConfig {
                                                 "A comma separated list of blacklisted enemies. Uses startsWith, so you don't need the full name.");
 
         telepadEnemyUsesPower = configFile.Bind("Telepad", "6. Enemy Uses Power", true, "If set to true, will use battery power to teleport enemies.");
+
+        telepadDropsItems = configFile.Bind("Telepad", "7. Teleport Drops Items", false, "If set to true, will drop all items upon teleport.");
 
 
         fixTwoHandedWeapons = configFile.Bind("Bug Fixes", "Fix Two Handed Weapons", true,

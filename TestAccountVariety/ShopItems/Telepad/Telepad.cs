@@ -6,6 +6,7 @@ using GameNetcodeStuff;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Random = System.Random;
 
 namespace TestAccountVariety.ShopItems.Telepad;
@@ -207,10 +208,12 @@ public class Telepad : GrabbableObject {
     public IEnumerator TeleportPlayer(PlayerControllerB player) {
         yield return new WaitForEndOfFrame();
 
-        player.DropAllHeldItems();
+        if (VarietyConfig.telepadDropsItems.Value) {
+            player.DropAllHeldItems();
 
-        yield return null;
-        yield return new WaitForEndOfFrame();
+            yield return null;
+            yield return new WaitForEndOfFrame();
+        }
 
         player.TeleportPlayer(teleportationPoint.position);
         player.isInsideFactory = isInFactory;
