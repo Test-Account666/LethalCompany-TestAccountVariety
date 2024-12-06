@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.32.0
+
+\+ Added option to drop all items upon using Telepad<br>
+
 ## 1.31.0
 
 \+ Added Hypercube<br>
