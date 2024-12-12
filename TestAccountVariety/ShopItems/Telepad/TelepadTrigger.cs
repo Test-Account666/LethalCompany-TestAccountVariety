@@ -4,6 +4,7 @@ using GameNetcodeStuff;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
 using UnityEngine;
+using static TestAccountVariety.Utils.ReferenceResolver;
 using Random = System.Random;
 
 namespace TestAccountVariety.ShopItems.Telepad;
@@ -60,11 +61,9 @@ public class TelepadTrigger : MonoBehaviour {
     public void TryHandleEnemyTeleport(Collider other) {
         if (!VarietyConfig.telepadEnableEnemyTeleport.Value) return;
 
-        var hasEnemy = other.TryGetComponent<EnemyAICollisionDetect>(out var collisionDetect);
+        var hasEnemy = TryGetEnemy(other, out var enemyAI);
 
-        if (!hasEnemy || !collisionDetect.mainScript) return;
-
-        var enemyAI = collisionDetect.mainScript;
+        if (!hasEnemy) return;
 
         var blackList = VarietyConfig.telepadEnemyBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
 

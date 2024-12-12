@@ -2,6 +2,7 @@ using System.Collections;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using static TestAccountVariety.Utils.ReferenceResolver;
 
 namespace TestAccountVariety.Hazards.PrisonMine;
 
@@ -25,6 +26,8 @@ public class PrisonMine : NetworkBehaviour {
     public AudioClip farUntrapClip;
 
     public Animator animator;
+
+    public Transform enemyTeleportPoint;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private void Update() => nextTrigger -= Time.deltaTime;
@@ -43,24 +46,43 @@ public class PrisonMine : NetworkBehaviour {
             return;
         }
 
-        if (!IsHost) return;
+        if (!IsHost || !VarietyConfig.useBigEnemyCollider.Value) return;
 
-        TriggerCageClientRpc();
+        TriggerAsEnemy(other);
+    }
+
+    public void TriggerAsEnemy(Collider collider) {
+        TriggerCageClientRpc(VarietyConfig.cageMineCoolDown.Value, VarietyConfig.cageEnemyTrapTime.Value);
+
+        var hasEnemy = TryGetEnemy(collider, out var enemyAI);
+
+        if (!hasEnemy) return;
+
+        TeleportEnemyClientRpc(enemyAI.NetworkObject);
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void TriggerCageServerRpc() {
-        TriggerCageClientRpc();
+        TriggerCageClientRpc(VarietyConfig.cageMineCoolDown.Value, VarietyConfig.cagePlayerTrapTime.Value);
     }
 
 
     [ClientRpc]
-    public void TriggerCageClientRpc() {
-        nextTrigger = 6F + 12F;
-        StartCoroutine(TriggerPrisonMine());
+    public void TriggerCageClientRpc(float coolDown, float trapTime) {
+        nextTrigger = coolDown + trapTime;
+        StartCoroutine(TriggerPrisonMine(trapTime));
     }
 
-    public IEnumerator TriggerPrisonMine() {
+    [ClientRpc]
+    public void TeleportEnemyClientRpc(NetworkObjectReference enemyReference) {
+        var hasEnemy = TryGetEnemy(enemyReference, out var enemyAI);
+
+        if (!hasEnemy) return;
+
+        enemyAI.agent.Warp(enemyTeleportPoint.position);
+    }
+
+    public IEnumerator TriggerPrisonMine(float trapTime) {
         audioSource.PlayOneShot(triggerClip);
         farAudioSource.PlayOneShot(farTriggerClip);
 
@@ -71,7 +93,7 @@ public class PrisonMine : NetworkBehaviour {
         audioSource.PlayOneShot(trapClip);
         farAudioSource.PlayOneShot(farTrapClip);
 
-        yield return new WaitForSeconds(12F);
+        yield return new WaitForSeconds(trapTime);
 
         animator.SetTrigger(_UntriggerAnimatorHash);
 

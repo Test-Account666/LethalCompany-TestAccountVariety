@@ -23,6 +23,14 @@ internal static class VarietyConfig {
     public static ConfigEntry<bool> telepadEnemyUsesPower = null!;
     public static ConfigEntry<bool> telepadDropsItems = null!;
 
+    public static ConfigEntry<float> cageMineCoolDown = null!;
+    public static ConfigEntry<float> cagePlayerTrapTime = null!;
+    public static ConfigEntry<float> cageEnemyTrapTime = null!;
+    public static ConfigEntry<bool> useBigEnemyCollider = null!;
+
+    public static ConfigEntry<int> lightSwitchKillChance = null!;
+    public static ConfigEntry<int> lightSwitchBatteryUsage = null!;
+
     public static ConfigEntry<bool> fixTwoHandedWeapons = null!;
 
     public static void Initialize(ConfigFile configFile) {
@@ -71,6 +79,27 @@ internal static class VarietyConfig {
         telepadEnemyUsesPower = configFile.Bind("Telepad", "6. Enemy Uses Power", true, "If set to true, will use battery power to teleport enemies.");
 
         telepadDropsItems = configFile.Bind("Telepad", "7. Teleport Drops Items", false, "If set to true, will drop all items upon teleport.");
+
+
+        cageMineCoolDown = configFile.Bind("Cage Mine", "3. Cooldown", 6F,
+                                           new ConfigDescription("The amount of time before the cage mine can be triggered again.",
+                                                                 new AcceptableValueRange<float>(3F, 12F)));
+
+        cagePlayerTrapTime = configFile.Bind("Cage Mine", "3. Player Trap Time", 12F,
+                                             new ConfigDescription("The amount of time a player can be trapped.", new AcceptableValueRange<float>(6F, 24F)));
+
+        cageEnemyTrapTime = configFile.Bind("Cage Mine", "4. Enemy Trap Time", 8F,
+                                            new ConfigDescription("The amount of time an enemy can be trapped.", new AcceptableValueRange<float>(6F, 24F)));
+
+        useBigEnemyCollider = configFile.Bind("Cage Mine", "5. Use Big Enemy Collider", false,
+                                              "If set to true, will use the same collider as players to trap enemies.");
+
+
+        lightSwitchKillChance = configFile.Bind("Light Switch", "6. Kill Chance", 5,
+                                                new ConfigDescription("The chance using this item will kill you.", new AcceptableValueRange<int>(0, 100)));
+
+        lightSwitchBatteryUsage = configFile.Bind("Light Switch", "7. Battery Usage", 15,
+                                                  new ConfigDescription("The battery usage for every use.", new AcceptableValueRange<int>(0, 100)));
 
 
         fixTwoHandedWeapons = configFile.Bind("Bug Fixes", "Fix Two Handed Weapons", true,

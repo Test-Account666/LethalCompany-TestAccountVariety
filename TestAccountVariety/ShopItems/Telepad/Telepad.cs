@@ -6,7 +6,7 @@ using GameNetcodeStuff;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Rendering;
+using static TestAccountVariety.Utils.ReferenceResolver;
 using Random = System.Random;
 
 namespace TestAccountVariety.ShopItems.Telepad;
@@ -45,8 +45,8 @@ public class Telepad : GrabbableObject {
     }
 
     public override void GrabItem() {
+        ApplyCoolDown();
         active = false;
-        UpdateMaterial(false);
         SetScale(_DEACTIVATED_SCALE);
 
         base.GrabItem();
@@ -164,39 +164,6 @@ public class Telepad : GrabbableObject {
         if (!hasSourceTelepad) return;
 
         TeleportOnLocalClient(sourceTelepad, player);
-    }
-
-    public static bool TryGetTelepad(NetworkObjectReference telepadReference, out Telepad telepad) {
-        var networkObject = (NetworkObject) telepadReference;
-
-        if (networkObject) return networkObject.TryGetComponent(out telepad);
-
-        telepad = null!;
-        return false;
-    }
-
-    public static bool TryGetPlayer(int playerIndex, out PlayerControllerB player) {
-        if (playerIndex < 0) {
-            player = null!;
-            return false;
-        }
-
-        if (playerIndex >= StartOfRound.Instance.allPlayerScripts.Length) {
-            player = null!;
-            return false;
-        }
-
-        player = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        return player;
-    }
-
-    public static bool TryGetEnemy(NetworkObjectReference enemyReference, out EnemyAI enemyAI) {
-        var networkObject = (NetworkObject) enemyReference;
-
-        if (networkObject) return networkObject.TryGetComponent(out enemyAI);
-
-        enemyAI = null!;
-        return false;
     }
 
     public void TeleportOnLocalClient(Telepad sourceTelepad, PlayerControllerB player) {
