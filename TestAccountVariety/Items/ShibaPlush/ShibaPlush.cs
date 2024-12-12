@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using TestAccountVariety.Items.ShibaPlush.Functions;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,7 +12,24 @@ public class ShibaPlush : NoisemakerProp {
     // ReSharper disable once UnassignedField.Global
     // ReSharper disable once CollectionNeverUpdated.Global
     public ShibaPlushFunction[] shibaPlushFunctions;
+
+    public GameObject partyHat;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+    public override void Start() {
+        base.Start();
+
+        partyHat.SetActive(false);
+
+        var currentTime = DateTime.Now;
+
+        if (currentTime is not {
+                Day: >= 8 and <= 10,
+                Month: 10,
+            }) return;
+
+        partyHat.SetActive(true);
+    }
 
     public override void ItemActivate(bool used, bool buttonDown = true) {
         if (playerHeldBy == null || !playerHeldBy) return;
