@@ -1,5 +1,15 @@
 # TestAccountVariety
 
+## 1.33.0
+
+\+ Added birthday easter egg to Shiba Plush (Activates on my birthday :>)<br>
+\+ Added config more options for Cage Mine<br>
+\+ Added Light Switch<br>
+\* Fixed Hypercube Scan Node<br>
+\* Fixed Telepads looking like they're enabled when bought/spawned<br>
+\# It's now easier to trap enemies using the Cage Mine<br>
+\# Made changes to map hazards for that one person<br>
+
 ## 1.32.0
 
 \+ Added option to drop all items upon using Telepad<br>
