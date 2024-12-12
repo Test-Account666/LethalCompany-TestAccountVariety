@@ -25,6 +25,7 @@ Currently, adds:
 - Monitor
 - Colored throwable cubes
 - Hypercube
+- Light Switch
 
 </details>
 
