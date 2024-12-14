@@ -26,6 +26,7 @@ Currently, adds:
 - Colored throwable cubes
 - Hypercube
 - Light Switch
+- Evil Yippee
 
 </details>
 
@@ -42,6 +43,7 @@ Currently, adds:
 - Propulsion Mine
 - Gift Mimic
 - Prison Mine
+- Laser Emitter
 
 </details>
 
