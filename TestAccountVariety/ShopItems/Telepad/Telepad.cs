@@ -45,11 +45,28 @@ public class Telepad : GrabbableObject {
     }
 
     public override void GrabItem() {
+        Deactivate();
+
+        base.GrabItem();
+    }
+
+    public override void GrabItemFromEnemy(EnemyAI enemy) {
+        Deactivate();
+
+        base.GrabItemFromEnemy(enemy);
+    }
+
+    public override void DiscardItemFromEnemy() {
+        base.DiscardItemFromEnemy();
+
+        active = true;
+        SetScale(_ACTIVATED_SCALE);
+    }
+
+    public void Deactivate() {
         ApplyCoolDown();
         active = false;
         SetScale(_DEACTIVATED_SCALE);
-
-        base.GrabItem();
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true) {
