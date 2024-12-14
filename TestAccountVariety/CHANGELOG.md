@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.34.0
+
+\+ Added Evil Yippee<br>
+\+ Added Laser Emitter<br>
+\* Hopefully fixed Telepad for Hoarding Bugs<br>
+
 ## 1.33.0
 
 \+ Added birthday easter egg to Shiba Plush (Activates on my birthday :>)<br>
