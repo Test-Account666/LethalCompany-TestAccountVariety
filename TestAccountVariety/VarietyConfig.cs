@@ -31,6 +31,9 @@ internal static class VarietyConfig {
     public static ConfigEntry<int> lightSwitchKillChance = null!;
     public static ConfigEntry<int> lightSwitchBatteryUsage = null!;
 
+    public static ConfigEntry<int> laserPlayerDamage = null!;
+    public static ConfigEntry<int> laserEnemyDamage = null!;
+
     public static ConfigEntry<bool> fixTwoHandedWeapons = null!;
 
     public static void Initialize(ConfigFile configFile) {
@@ -53,8 +56,7 @@ internal static class VarietyConfig {
                                                   "A comma separated list of blacklisted enemies. " + "Uses startsWith, so you don't need the full name.");
 
         giftMimicScrapChance = configFile.Bind("Gift Mimic", "6. Scrap Chance", 45,
-                                               new ConfigDescription("The chance for spawning scrap instead of enemies",
-                                                                     new AcceptableValueRange<int>(0, 100)));
+                                               new ConfigDescription("The chance for spawning scrap instead of enemies", new AcceptableValueRange<int>(0, 100)));
 
         giftMimicScrapBlacklist = configFile.Bind("Gift Mimic", "7. Scrap Blacklist", "example1, example2",
                                                   "A comma separated list of blacklisted scraps. Uses startsWith, so you don't need the full name.");
@@ -100,6 +102,12 @@ internal static class VarietyConfig {
 
         lightSwitchBatteryUsage = configFile.Bind("Light Switch", "7. Battery Usage", 15,
                                                   new ConfigDescription("The battery usage for every use.", new AcceptableValueRange<int>(0, 100)));
+
+
+        laserPlayerDamage = configFile.Bind("Laser Emitter", "3. Player Damage", 15,
+                                            new ConfigDescription("The damage a player receives while inside the laser.", new AcceptableValueRange<int>(1, 100)));
+        laserEnemyDamage = configFile.Bind("Laser Emitter", "4. Enemy Damage", 1,
+                                           new ConfigDescription("The damage an enemy receives while inside the laser.", new AcceptableValueRange<int>(1, 100)));
 
 
         fixTwoHandedWeapons = configFile.Bind("Bug Fixes", "Fix Two Handed Weapons", true,
