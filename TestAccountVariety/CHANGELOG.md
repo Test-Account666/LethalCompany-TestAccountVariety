@@ -1,5 +1,13 @@
 # TestAccountVariety
 
+## 1.35.0
+
+\+ Added damage config options for Propulsion Mine<br>
+\+ Added more config options for Laser Emittery<br>
+\+ Added a configurable chance for Evil Yippee to spawn a hazard - Defaulting at 100%<br>
+\* Fixed hazards spawned by Evil Yippee persisting between rounds<br>
+\# Changed how configs are done. Shouldn't change anything for you<br>
+
 ## 1.34.0
 
 \+ Added Evil Yippee<br>
