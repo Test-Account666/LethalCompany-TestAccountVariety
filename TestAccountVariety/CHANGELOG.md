@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.35.1
+
+\* Finally fix yippee config<br>
+
 ## 1.35.0
 
 \+ Added damage config options for Propulsion Mine<br>
