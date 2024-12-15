@@ -1,5 +1,6 @@
 using System;
 using GameNetcodeStuff;
+using TestAccountVariety.Config;
 using UnityEngine;
 using static TestAccountVariety.Utils.ReferenceResolver;
 
@@ -8,8 +9,6 @@ namespace TestAccountVariety.Hazards.LaserEmitter;
 public class LaserCollider : MonoBehaviour {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public LaserEmitter laserEmitter;
-
-    public float damageCooldown;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     public float nextDamage;
@@ -38,8 +37,8 @@ public class LaserCollider : MonoBehaviour {
 
         if (!hasEnemy) return;
 
-        enemyAI.HitEnemyClientRpc(VarietyConfig.laserEnemyDamage.Value, -1, true);
-        nextEnemyDamage = damageCooldown;
+        enemyAI.HitEnemyClientRpc(LaserEmitterConfig.laserEnemyDamage.Value, -1, true);
+        nextEnemyDamage = LaserEmitterConfig.laserEnemyCoolDown.Value;
     }
 
     public void HandlePlayerDamage(Collider collider) {
@@ -53,7 +52,7 @@ public class LaserCollider : MonoBehaviour {
 
         if (!hasPlayer) return;
 
-        player.DamagePlayer(VarietyConfig.laserPlayerDamage.Value, causeOfDeath: CauseOfDeath.Burning, deathAnimation: 6);
-        nextDamage = damageCooldown;
+        player.DamagePlayer(LaserEmitterConfig.laserPlayerDamage.Value, causeOfDeath: CauseOfDeath.Burning, deathAnimation: 6);
+        nextDamage = LaserEmitterConfig.laserPlayerCoolDown.Value;
     }
 }

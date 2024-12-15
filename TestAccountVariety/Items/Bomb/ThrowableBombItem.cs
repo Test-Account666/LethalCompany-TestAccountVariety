@@ -1,4 +1,5 @@
 using System;
+using TestAccountVariety.Config;
 using Unity.Netcode;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
@@ -31,7 +32,7 @@ public class ThrowableBombItem : StunGrenadeItem {
     public void RollExplosionChanceServerRpc() {
         var generatedChance = new Random((uint) (DateTime.Now.Ticks & 0x0000FFFF)).NextInt(1, 100);
 
-        var explode = generatedChance < VarietyConfig.bombExplodeChance.Value;
+        var explode = generatedChance < BombConfig.bombExplodeChance.Value;
 
         if (!explode) return;
 

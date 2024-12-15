@@ -4,8 +4,10 @@ using BepInEx.Logging;
 using HarmonyLib;
 using TestAccountCore.Dependencies;
 using TestAccountCore.Dependencies.Compatibility;
+using TestAccountVariety.Config;
 using TestAccountVariety.Items.Bomb.Patches;
 using TestAccountVariety.Items.ThrowableCube.Patches;
+using TestAccountVariety.Items.Yippee.Patches;
 using TestAccountVariety.Patches;
 using static TestAccountCore.AssetLoader;
 using static TestAccountCore.Netcode;
@@ -29,6 +31,7 @@ public class TestAccountVariety : BaseUnityPlugin {
         Harmony.PatchAll(typeof(ThrowableCubePatch));
         Harmony.PatchAll(typeof(ShovelPatch));
         Harmony.PatchAll(typeof(BombPatch));
+        Harmony.PatchAll(typeof(RoundManagerPatch));
 
         Logger.LogDebug("Finished patching!");
     }
@@ -54,7 +57,7 @@ public class TestAccountVariety : BaseUnityPlugin {
         LoadUnlockables(Config);
         LoadCustomScripts(Config);
 
-        VarietyConfig.Initialize(Config);
+        VarietyConfig.InitializeConfigs(Config);
 
         Patch();
 

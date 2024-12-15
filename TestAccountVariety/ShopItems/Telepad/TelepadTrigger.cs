@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using GameNetcodeStuff;
+using TestAccountVariety.Config;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
 using UnityEngine;
@@ -59,13 +60,15 @@ public class TelepadTrigger : MonoBehaviour {
     }
 
     public void TryHandleEnemyTeleport(Collider other) {
-        if (!VarietyConfig.telepadEnableEnemyTeleport.Value) return;
+        if (!TelepadConfig.telepadEnableEnemyTeleport.Value) return;
 
         var hasEnemy = TryGetEnemy(other, out var enemyAI);
 
         if (!hasEnemy) return;
 
-        var blackList = VarietyConfig.telepadEnemyBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
+        if (enemyAI.isEnemyDead) return;
+
+        var blackList = TelepadConfig.telepadEnemyBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
 
         if (blackList.Any(blacklistedEnemy => enemyAI.enemyType.enemyName.ToLower().StartsWith(blacklistedEnemy.ToLower()))) return;
 

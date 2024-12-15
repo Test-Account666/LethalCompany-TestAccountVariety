@@ -1,4 +1,5 @@
 using System;
+using TestAccountVariety.Config;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,9 +14,6 @@ public class LaserEmitter : NetworkBehaviour {
     public ParticleSystem laserParticles;
     public AudioSource laserAudio;
     public Light laserLight;
-
-    public float minSpeed;
-    public float maxSpeed;
 
     public float maxCeilingDistance;
 
@@ -56,7 +54,7 @@ public class LaserEmitter : NetworkBehaviour {
 
     public void SetupLaser() {
         var random = new Random((uint) (DateTime.Now.Ticks + transform.position.ConvertToInt()));
-        laserSpeed = random.NextFloat(minSpeed, maxSpeed);
+        laserSpeed = random.NextFloat(LaserEmitterConfig.laserMinimumMovementSpeed.Value, LaserEmitterConfig.laserMaximumMovementSpeed.Value);
 
         var hitCeiling = Physics.Linecast(transform.position, transform.position + transform.up * maxCeilingDistance, out var ceilingInfo, 1 << 8);
         distance = maxCeilingDistance;

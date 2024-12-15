@@ -1,4 +1,5 @@
 using System;
+using TestAccountVariety.Config;
 using Unity.Netcode;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
@@ -29,7 +30,7 @@ public class YippeeParticles : NetworkBehaviour {
     public void PlayParticlesServerRpc() {
         var generatedChance = _random.NextInt(1, 100);
 
-        var confetti = generatedChance < VarietyConfig.yippeeParticleChance.Value;
+        var confetti = generatedChance < YippeeConfig.yippeeParticleChance.Value;
 
         if (!confetti) return;
 

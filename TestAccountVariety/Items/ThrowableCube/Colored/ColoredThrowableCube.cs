@@ -1,4 +1,5 @@
 using System;
+using TestAccountVariety.Config;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
 using UnityEngine;
@@ -117,8 +118,8 @@ public class ColoredThrowableCube : ThrowableCube {
 
             sizeIndex = itemPropertiesBySize.Length <= 0? -1 : colorRandom.NextInt(0, itemPropertiesBySize.Length);
 
-            enableLights = colorRandom.NextInt(1, 100) <= VarietyConfig.coloredCubeLightChance.Value;
-            isRainbow = colorRandom.NextInt(1, 100) <= VarietyConfig.coloredCubeRainbowChance.Value;
+            enableLights = colorRandom.NextInt(1, 100) <= CubeConfig.ColoredCubeConfig.coloredCubeLightChance.Value;
+            isRainbow = colorRandom.NextInt(1, 100) <= CubeConfig.ColoredCubeConfig.coloredCubeRainbowChance.Value;
 
             choseColor = true;
         }

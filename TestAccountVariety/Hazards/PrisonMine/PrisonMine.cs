@@ -1,5 +1,6 @@
 using System.Collections;
 using GameNetcodeStuff;
+using TestAccountVariety.Config;
 using Unity.Netcode;
 using UnityEngine;
 using static TestAccountVariety.Utils.ReferenceResolver;
@@ -46,13 +47,13 @@ public class PrisonMine : NetworkBehaviour {
             return;
         }
 
-        if (!IsHost || !VarietyConfig.useBigEnemyCollider.Value) return;
+        if (!IsHost || !CageMineConfig.useBigEnemyCollider.Value) return;
 
         TriggerAsEnemy(other);
     }
 
     public void TriggerAsEnemy(Collider collider) {
-        TriggerCageClientRpc(VarietyConfig.cageMineCoolDown.Value, VarietyConfig.cageEnemyTrapTime.Value);
+        TriggerCageClientRpc(CageMineConfig.cageMineCoolDown.Value, CageMineConfig.cageEnemyTrapTime.Value);
 
         var hasEnemy = TryGetEnemy(collider, out var enemyAI);
 
@@ -63,7 +64,7 @@ public class PrisonMine : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     public void TriggerCageServerRpc() {
-        TriggerCageClientRpc(VarietyConfig.cageMineCoolDown.Value, VarietyConfig.cagePlayerTrapTime.Value);
+        TriggerCageClientRpc(CageMineConfig.cageMineCoolDown.Value, CageMineConfig.cagePlayerTrapTime.Value);
     }
 
 

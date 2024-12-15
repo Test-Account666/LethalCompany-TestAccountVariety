@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MonoMod.Utils;
+using TestAccountVariety.Config;
 using Unity.Netcode;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
@@ -12,6 +13,10 @@ public class EvilYippeeParticles : NetworkBehaviour {
     public ParticleSystem particleSystem;
     public GrabbableObject grabbableObject;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+    [NonSerialized]
+    public static readonly List<NetworkObject> SpawnedPrefabs = [
+    ];
 
     private Random _random;
 
@@ -37,7 +42,7 @@ public class EvilYippeeParticles : NetworkBehaviour {
 
         var generatedChance = _random.NextInt(1, 100);
 
-        var confetti = generatedChance < VarietyConfig.yippeeParticleChance.Value;
+        var confetti = generatedChance < YippeeConfig.yippeeParticleChance.Value;
 
         if (!confetti) return;
 
@@ -45,6 +50,12 @@ public class EvilYippeeParticles : NetworkBehaviour {
     }
 
     public void SpawnHazard() {
+        var generatedChance = _random.NextInt(1, 100);
+
+        var spawnHazard = generatedChance < YippeeConfig.EvilYippeeConfig.evilYippeeHazardSpawnChance.Value;
+
+        if (!spawnHazard) return;
+
         if (StartOfRound.Instance.inShipPhase) return;
 
         List<SpawnableMapObject> potentialMapHazards = [
@@ -72,6 +83,8 @@ public class EvilYippeeParticles : NetworkBehaviour {
         var networkObject = hazard.GetComponent<NetworkObject>();
 
         networkObject.Spawn();
+
+        SpawnedPrefabs.Add(networkObject);
     }
 
     [ClientRpc]

@@ -1,5 +1,6 @@
 using System.Collections;
 using GameNetcodeStuff;
+using TestAccountVariety.Config;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
@@ -35,7 +36,6 @@ public class NewPropulsionMine : PropulsionMine {
     public float physicsForce;
 
     public float damageRange;
-    public int nonLethalDamage;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private static readonly int _BoomAnimatorHash = Animator.StringToHash("Boom");
@@ -157,8 +157,8 @@ public class NewPropulsionMine : PropulsionMine {
         farMineAudio.pitch = Random.Range(0.93F, 1.07F);
         farMineAudio.PlayOneShot(detonateFarClip, 1F);
 
-        Landmine.SpawnExplosion(transform.position + Vector3.up, killRange: 0F,
-                                damageRange: damageRange, nonLethalDamage: nonLethalDamage, physicsForce: physicsForce);
+        Landmine.SpawnExplosion(transform.position + Vector3.up, killRange: 0F, damageRange: damageRange,
+                                nonLethalDamage: PropulsionMineConfig.propulsionMinePlayerDamage.Value, physicsForce: physicsForce);
     }
 
     public void PlayBeep() {

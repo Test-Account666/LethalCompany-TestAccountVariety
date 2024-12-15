@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
+using TestAccountVariety.Config;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
 using UnityEngine;
@@ -192,7 +193,7 @@ public class Telepad : GrabbableObject {
     public IEnumerator TeleportPlayer(PlayerControllerB player) {
         yield return new WaitForEndOfFrame();
 
-        if (VarietyConfig.telepadDropsItems.Value) {
+        if (TelepadConfig.telepadDropsItems.Value) {
             player.DropAllHeldItems();
 
             yield return null;
@@ -215,7 +216,7 @@ public class Telepad : GrabbableObject {
 
         if (!hasEnemy) return;
 
-        HandlePreTeleport(sourceTelepad, VarietyConfig.telepadEnemyUsesPower.Value);
+        HandlePreTeleport(sourceTelepad, TelepadConfig.telepadEnemyUsesPower.Value);
 
         enemyAI.agent.Warp(teleportationPoint.position);
         enemyAI.isInsidePlayerShip = isInShipRoom;
@@ -252,7 +253,7 @@ public class Telepad : GrabbableObject {
 
     public bool CanTeleport() => CanCoolDownTick() && currentTeleportCoolDown <= 0;
 
-    public bool CanCoolDownTick() => active && !isHeld && insertedBattery.charge > 0;
+    public bool CanCoolDownTick() => active && !isHeld && !isHeldByEnemy && insertedBattery.charge > 0;
 
     public void SetScale(float newScale) {
         originalScale = new(newScale, newScale, newScale);

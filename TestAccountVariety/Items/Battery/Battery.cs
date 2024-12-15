@@ -21,11 +21,9 @@ public class Battery : GrabbableObject {
         var cameraTransform = localPlayer.gameplayCamera.transform;
         var objectRay = new Ray(cameraTransform.position, cameraTransform.forward);
 
-        var foundObject =
-            Physics.Raycast(objectRay, out var hit, localPlayer.grabDistance, localPlayer.interactableObjectsMask)
-         && hit.collider.gameObject.layer != 8
-         && hit.collider.tag == "PhysicsProp"
-         && !Physics.Linecast(cameraTransform.position, hit.collider.transform.position + localPlayer.transform.up * 0.16f, 1073741824,
+        var foundObject = Physics.Raycast(objectRay, out var hit, localPlayer.grabDistance, localPlayer.interactableObjectsMask)
+                       && hit.collider.gameObject.layer != 8 && hit.collider.tag == "PhysicsProp" && !Physics.Linecast(
+                              cameraTransform.position, hit.collider.transform.position + localPlayer.transform.up * 0.16f, 1073741824,
                               QueryTriggerInteraction.Ignore);
 
         if (!foundObject) return;

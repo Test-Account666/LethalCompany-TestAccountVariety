@@ -16,8 +16,7 @@ public class HoldableNoisemakerProp : NoisemakerProp {
         nextAudibleNoise -= Time.deltaTime;
 
         if (nextAudibleNoise <= 0) {
-            RoundManager.Instance.PlayAudibleNoise(transform.position, noiseRange, currentLoudness, 0,
-                                                   isInElevator && StartOfRound.Instance.hangarDoorsClosed);
+            RoundManager.Instance.PlayAudibleNoise(transform.position, noiseRange, currentLoudness, 0, isInElevator && StartOfRound.Instance.hangarDoorsClosed);
             nextAudibleNoise = .5F;
         }
 
@@ -90,8 +89,7 @@ public class HoldableNoisemakerProp : NoisemakerProp {
 
         currentLoudness = loudness;
 
-        RoundManager.Instance.PlayAudibleNoise(transform.position, noiseRange, currentLoudness, 0,
-                                               isInElevator && StartOfRound.Instance.hangarDoorsClosed);
+        RoundManager.Instance.PlayAudibleNoise(transform.position, noiseRange, currentLoudness, 0, isInElevator && StartOfRound.Instance.hangarDoorsClosed);
 
         if (minLoudness < 0.6000000238418579 || playerHeldBy == null) return;
         playerHeldBy.timeSinceMakingLoudNoise = 0.0f;

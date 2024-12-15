@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TestAccountVariety.Config;
 using Unity.Netcode;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
@@ -77,7 +78,7 @@ public class GiftMimic : NetworkBehaviour {
 
         var rolledChance = _random.NextInt(1, 100);
 
-        yield return rolledChance < VarietyConfig.giftMimicScrapChance.Value? SpawnScrap(timeOut) : SpawnEnemy(timeOut);
+        yield return rolledChance < GiftMimicConfig.giftMimicScrapChance.Value? SpawnScrap(timeOut) : SpawnEnemy(timeOut);
     }
 
     public IEnumerator SpawnScrap(float timeOut) {
@@ -85,7 +86,7 @@ public class GiftMimic : NetworkBehaviour {
             ..StartOfRound.Instance.currentLevel.spawnableScrap,
         ];
 
-        var blackList = VarietyConfig.giftMimicScrapBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
+        var blackList = GiftMimicConfig.giftMimicScrapBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
 
         spawnableItems.RemoveAll(scrap => blackList.Any(blackListedScrap => scrap.spawnableItem.itemName.ToLower().StartsWith(blackListedScrap.ToLower())));
 
@@ -130,9 +131,9 @@ public class GiftMimic : NetworkBehaviour {
             ..StartOfRound.Instance.currentLevel.Enemies,
         ];
 
-        if (VarietyConfig.giftMimicSpawnsOutsideEnemies.Value) spawnableEnemies.AddRange(StartOfRound.Instance.currentLevel.OutsideEnemies);
+        if (GiftMimicConfig.giftMimicSpawnsOutsideEnemies.Value) spawnableEnemies.AddRange(StartOfRound.Instance.currentLevel.OutsideEnemies);
 
-        var blackList = VarietyConfig.giftMimicEnemyBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
+        var blackList = GiftMimicConfig.giftMimicEnemyBlacklist.Value.Replace(", ", ",").Split(",").ToHashSet();
 
         spawnableEnemies.RemoveAll(enemy => blackList.Any(blackListedEnemy => enemy.enemyType.enemyName.ToLower().StartsWith(blackListedEnemy.ToLower())));
 
@@ -188,7 +189,7 @@ public class GiftMimic : NetworkBehaviour {
             var random = new System.Random();
             var generatedChance = random.Next(1, 100);
 
-            variationName = generatedChance > VarietyConfig.giftMimicAlternativeVariantChance.Value? "Normal" : "Upturned";
+            variationName = generatedChance > GiftMimicConfig.giftMimicAlternativeVariantChance.Value? "Normal" : "Upturned";
         }
 
         SyncGiftBoxArtClientRpc(variationName);

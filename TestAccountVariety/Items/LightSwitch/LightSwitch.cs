@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using GameNetcodeStuff;
+using TestAccountVariety.Config;
 using Unity.Netcode;
 using UnityEngine;
 using static TestAccountVariety.Utils.ReferenceResolver;
@@ -86,7 +87,7 @@ public class LightSwitch : NoisemakerProp {
 
         var generatedChance = random.NextInt(1, 100);
 
-        var kill = generatedChance < VarietyConfig.lightSwitchKillChance.Value;
+        var kill = generatedChance < LightSwitchConfig.lightSwitchKillChance.Value;
         if (!kill) return;
 
         KillPlayerClientRpc(playerId);
@@ -97,6 +98,6 @@ public class LightSwitch : NoisemakerProp {
 
         var currentCharge = insertedBattery.charge * 100;
 
-        SyncBatteryClientRpc(Math.Max((int) (currentCharge - VarietyConfig.lightSwitchBatteryUsage.Value), 0));
+        SyncBatteryClientRpc(Math.Max((int) (currentCharge - LightSwitchConfig.lightSwitchBatteryUsage.Value), 0));
     }
 }
