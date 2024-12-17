@@ -35,7 +35,7 @@ public class LaserCollider : MonoBehaviour {
 
         var hasEnemy = TryGetEnemy(collider, out var enemyAI);
 
-        if (!hasEnemy) return;
+        if (!hasEnemy || enemyAI.isEnemyDead) return;
 
         enemyAI.HitEnemyClientRpc(LaserEmitterConfig.laserEnemyDamage.Value, -1, true);
         nextEnemyDamage = LaserEmitterConfig.laserEnemyCoolDown.Value;
