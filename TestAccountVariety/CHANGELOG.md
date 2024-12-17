@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.35.2
+
+\* Fixed Evil Yippee throwing SpawnSateException<br>
+\* Fixed Laser Emitter hitting dead enemies<br>
+\# Added a temporary debug message to laser emitter<br>
+
 ## 1.35.1
 
 \* Finally fix yippee config<br>
