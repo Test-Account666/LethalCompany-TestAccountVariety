@@ -76,9 +76,9 @@ public class EvilYippeeParticles : NetworkBehaviour {
 
         var hazardToSpawn = potentialMapHazards[_random.NextInt(0, potentialMapHazards.Count)];
 
-        var hazard = Instantiate(hazardToSpawn.prefabToSpawn, grabbableObject.playerHeldBy.transform.position, Quaternion.identity);
+        var parent = RoundManager.Instance.mapPropsContainer.transform;
 
-        hazard.transform.parent = RoundManager.Instance.mapPropsContainer.transform;
+        var hazard = Instantiate(hazardToSpawn.prefabToSpawn, grabbableObject.playerHeldBy.transform.position, Quaternion.identity, parent);
 
         var networkObject = hazard.GetComponent<NetworkObject>();
 
