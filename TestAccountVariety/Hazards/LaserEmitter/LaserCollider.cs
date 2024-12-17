@@ -37,6 +37,8 @@ public class LaserCollider : MonoBehaviour {
 
         if (!hasEnemy || enemyAI.isEnemyDead) return;
 
+        TestAccountVariety.Logger.LogDebug($"Laser hitting Enemy: {enemyAI.enemyType.enemyName} ({enemyAI})");
+
         enemyAI.HitEnemyClientRpc(LaserEmitterConfig.laserEnemyDamage.Value, -1, true);
         nextEnemyDamage = LaserEmitterConfig.laserEnemyCoolDown.Value;
     }
