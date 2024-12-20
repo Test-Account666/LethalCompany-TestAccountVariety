@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.35.3
+
+\* Fixed Propulsion Mine<br>
+\# LaserEmitter now calls `HitEnemyOnLocalClient` instead of directly ClientRpc<br>
+
 ## 1.35.2
 
 \* Fixed Evil Yippee throwing SpawnSateException<br>
