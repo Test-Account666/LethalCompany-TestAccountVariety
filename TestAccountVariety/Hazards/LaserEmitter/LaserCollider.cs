@@ -39,7 +39,7 @@ public class LaserCollider : MonoBehaviour {
 
         TestAccountVariety.Logger.LogDebug($"Laser hitting Enemy: {enemyAI.enemyType.enemyName} ({enemyAI})");
 
-        enemyAI.HitEnemyClientRpc(LaserEmitterConfig.laserEnemyDamage.Value, -1, true);
+        enemyAI.HitEnemyOnLocalClient(LaserEmitterConfig.laserEnemyDamage.Value, Vector3.down, playHitSFX: true);
         nextEnemyDamage = LaserEmitterConfig.laserEnemyCoolDown.Value;
     }
 
