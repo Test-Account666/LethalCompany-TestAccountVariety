@@ -27,6 +27,8 @@ Currently, adds:
 - Hypercube
 - Light Switch
 - Evil Yippee
+- Christmas Radio
+- Cookies
 
 </details>
 
@@ -83,3 +85,6 @@ Currently, adds:
 - [superkerokero](https://sketchfab.com/3d-models/pikachu-voxel-art-997ad74b44014cc59900d794da996fd7) (Pika Model and
   Texture)
 - [zixisun02](https://sketchfab.com/3d-models/shiba-faef9fe5ace445e7b2989d1c1ece361c) (Shiba Plush Model and Texture)
+- [A glitched npc](https://www.twitch.tv/a_glitched_npc) (Giving the gingerbreadman cookie a voice)
+- [Twisted Translations](https://www.youtube.com/@twistedtranslations) (Music Type for Christmas Radio)
+- [Ludwig](https://www.youtube.com/watch?v=TtY9eRayseg&ab_channel=Ludwig) (Music Type for Christmas Radio)
