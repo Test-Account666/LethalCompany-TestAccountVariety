@@ -23,7 +23,7 @@ public class Cookie : NoisemakerProp {
         if (localPlayer == playerHeldBy) localPlayer.StartCoroutine(localPlayer.waitToEndOfFrameToDiscard());
 
         playerHeldBy.StartCoroutine(HealPlayer(playerHeldBy));
-        StartCoroutine(PlayAfterEatingNoiseAndDestroy());
+        StartCoroutine(PlayAfterEatingNoiseAndDestroy(playerHeldBy));
     }
 
     public static IEnumerator HealPlayer(PlayerControllerB playerControllerB) {
@@ -40,8 +40,8 @@ public class Cookie : NoisemakerProp {
         }
     }
 
-    public IEnumerator PlayAfterEatingNoiseAndDestroy() {
-        foreach (var meshRenderer in meshRenderers) meshRenderer.enabled = false;
+    public IEnumerator PlayAfterEatingNoiseAndDestroy(PlayerControllerB previouslyHeldBy) {
+        foreach (var meshRenderer in meshRenderers) meshRenderer.gameObject.SetActive(false);
         scanNodeObject.SetActive(false);
 
         grabbable = false;
@@ -50,7 +50,7 @@ public class Cookie : NoisemakerProp {
 
         yield return new WaitUntil(() => !noiseAudio.isPlaying);
         if (afterEatingNoiseClip) {
-            var tempAudioSource = Instantiate(afterEatingNoiseAudioSource, playerHeldBy.transform);
+            var tempAudioSource = Instantiate(afterEatingNoiseAudioSource, previouslyHeldBy.transform);
             tempAudioSource.PlayOneShot(afterEatingNoiseClip);
             yield return new WaitUntil(() => !tempAudioSource.isPlaying);
             Destroy(tempAudioSource.gameObject);
