@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.36.1
+
+\* Fixed icon for christmas radio<br>
+\* Fixed drop rotation for christmas radio<br>
+
 ## 1.36.0
 
 \+ Added christmas radio<br>
