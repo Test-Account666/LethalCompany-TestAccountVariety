@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.36.0
+
+\+ Added christmas radio<br>
+\+ Added two cookies<br>
+
 ## 1.35.4
 
 \+ Finally added some Credits. Sorry about them missing for so long<br>
