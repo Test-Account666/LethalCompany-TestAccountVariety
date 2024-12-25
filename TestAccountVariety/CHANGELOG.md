@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.36.2
+
+\# Reduced vertices count for cookies<br>
+\# Reduced file size caused by christmas music<br>
+
 ## 1.36.1
 
 \* Fixed icon for christmas radio<br>
