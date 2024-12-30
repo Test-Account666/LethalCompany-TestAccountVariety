@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.37.0
+
+\* Fixed laser emitter desyncs<br>
+\# Changed hit detection<br>
+\# Heavily turned down the spawn weight for christmas cookies and radio<br>
+
 ## 1.36.2
 
 \# Reduced vertices count for cookies<br>
