@@ -93,7 +93,7 @@ public class LaserEmitter : NetworkBehaviour {
 
     private void MoveLaser() {
         var targetPosition = _reverse? _leftEndPosition : _rightEndPosition;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * _laserSpeed);
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * _laserSpeed);
 
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f) _reverse = !_reverse;
 
