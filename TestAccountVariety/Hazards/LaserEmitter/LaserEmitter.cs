@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TestAccountVariety.Config;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
@@ -8,135 +9,113 @@ using Random = Unity.Mathematics.Random;
 namespace TestAccountVariety.Hazards.LaserEmitter;
 
 public class LaserEmitter : NetworkBehaviour {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public GameObject laser;
-    public LaserCollider laserCollider;
+#pragma warning disable CS8618
+    public LaserParticleCollider laserCollider;
     public ParticleSystem laserParticles;
     public AudioSource laserAudio;
     public Light laserLight;
 
     public float maxCeilingDistance;
-
     public float maxLeftDistance;
     public float minLeftDistance;
-
     public float maxRightDistance;
     public float minRightDistance;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public Vector3 ceilingPosition;
-    public float distance;
-    public Vector3 leftEndPosition;
-    public Vector3 rightEndPosition;
+#pragma warning restore CS8618
 
-    public float laserSpeed;
-    public bool reverse;
+    private Vector3 _ceilingPosition;
+    private Vector3 _leftEndPosition;
+    private Vector3 _rightEndPosition;
+    private float _laserSpeed;
+    private bool _reverse;
 
-    public bool valuesSynced;
+    private readonly NetworkVariable<Vector3> _serverPosition = new();
 
-    public void Start() => SetupLaserServerRpc();
+    private bool _networkSpawned;
 
-    public void Update() {
-        if (!valuesSynced) return;
+    private const float _POSITION_UPDATE_THRESHOLD = 0.01f;
 
-        transform.position = Vector3.Lerp(transform.position, reverse? leftEndPosition : rightEndPosition, Time.deltaTime * laserSpeed);
+    public override void OnNetworkSpawn() {
+        _serverPosition.OnValueChanged += OnServerPositionChanged;
 
-        var endDistance = Vector3.Distance(transform.position, reverse? leftEndPosition : rightEndPosition);
-
-        if (endDistance >= .1) return;
-        reverse = !reverse;
+        _networkSpawned = true;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void SetupLaserServerRpc() {
-        SetupLaser();
-        SetupLaserClientRpc(ceilingPosition, distance, leftEndPosition, rightEndPosition, laserSpeed, reverse);
+    private void Start() {
+        if (!IsServer && !IsHost) {
+            transform.Rotate(0, 0, 180);
+            return;
+        }
+
+        StartCoroutine(WaitUntilNetworkSpawned());
     }
 
-    public void SetupLaser() {
+    public IEnumerator WaitUntilNetworkSpawned() {
+        yield return new WaitUntil(() => _networkSpawned);
+        InitializeLaser();
+    }
+
+    public override void OnNetworkDespawn() {
+        base.OnNetworkDespawn();
+
+        _serverPosition.OnValueChanged -= OnServerPositionChanged;
+    }
+
+    private void Update() {
+        if (!IsServer && !IsHost) return;
+
+        MoveLaser();
+    }
+
+    private void InitializeLaser() {
         var random = new Random((uint) (DateTime.Now.Ticks + transform.position.ConvertToInt()));
-        laserSpeed = random.NextFloat(LaserEmitterConfig.laserMinimumMovementSpeed.Value, LaserEmitterConfig.laserMaximumMovementSpeed.Value);
+        _laserSpeed = random.NextFloat(LaserEmitterConfig.laserMinimumMovementSpeed.Value, LaserEmitterConfig.laserMaximumMovementSpeed.Value);
 
         var hitCeiling = Physics.Linecast(transform.position, transform.position + transform.up * maxCeilingDistance, out var ceilingInfo, 1 << 8);
-        distance = maxCeilingDistance;
+        var distance = hitCeiling? ceilingInfo.distance : maxCeilingDistance;
 
-        if (hitCeiling) distance = ceilingInfo.distance;
-
-        ceilingPosition = transform.position + transform.up * distance;
+        _ceilingPosition = transform.position + transform.up * distance;
 
         var leftDistance = random.NextFloat(minLeftDistance, maxLeftDistance);
         var rightDistance = random.NextFloat(minRightDistance, maxRightDistance);
 
-        rightDistance = GetWallDistance(ceilingPosition - transform.up, transform.right, rightDistance);
-        leftDistance = GetWallDistance(ceilingPosition - transform.up, -transform.right, leftDistance);
+        leftDistance = GetWallDistance(_ceilingPosition - transform.up, -transform.right, leftDistance);
+        rightDistance = GetWallDistance(_ceilingPosition - transform.up, transform.right, rightDistance);
 
+        _leftEndPosition = _ceilingPosition + -transform.right * leftDistance;
+        _rightEndPosition = _ceilingPosition + transform.right * rightDistance;
 
-        leftEndPosition = ceilingPosition + -transform.right * leftDistance;
-        rightEndPosition = ceilingPosition + transform.right * rightDistance;
+        _reverse = random.NextBool();
+        _serverPosition.Value = _ceilingPosition;
 
-        reverse = random.NextBool();
+        transform.position = _ceilingPosition;
+        transform.Rotate(0, 0, 180);
     }
+
+    private void MoveLaser() {
+        var targetPosition = _reverse? _leftEndPosition : _rightEndPosition;
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * _laserSpeed);
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f) _reverse = !_reverse;
+
+        if (Vector3.Distance(transform.position, _serverPosition.Value) >= _POSITION_UPDATE_THRESHOLD) _serverPosition.Value = transform.position;
+    }
+
+    private void OnServerPositionChanged(Vector3 previous, Vector3 current) => transform.position = current;
 
     public static float GetWallDistance(Vector3 position, Vector3 direction, float maxDistance) {
         var wallDistance = maxDistance;
-
         var wallHits = new RaycastHit[10];
 
         var wallHitCount = Physics.RaycastNonAlloc(position, direction, wallHits, maxDistance, 1 << 8 | 1 << 0);
-
         if (wallHitCount <= 0) return wallDistance;
 
         for (var index = 0; index < wallHitCount; index++) {
             var wallInfo = wallHits[index];
+            if (wallDistance <= wallInfo.distance - 0.5f) continue;
 
-            if (wallDistance <= wallInfo.distance - .5F) continue;
-
-            wallDistance = wallInfo.distance - .5F;
+            wallDistance = wallInfo.distance - 0.5f;
         }
 
         return wallDistance;
     }
-
-    // ReSharper disable ParameterHidesMember
-    [ClientRpc]
-    public void SetupLaserClientRpc(Vector3 ceilingPosition, float distance, Vector3 leftEndPosition, Vector3 rightEndPosition, float laserSpeed, bool reverse) {
-        this.ceilingPosition = ceilingPosition;
-        this.leftEndPosition = leftEndPosition;
-        this.rightEndPosition = rightEndPosition;
-        this.laserSpeed = laserSpeed;
-
-        transform.position = ceilingPosition;
-        transform.Rotate(0, 0, 180);
-
-        laser.transform.localScale += new Vector3(0, 0, (distance - .5F) * 100F);
-        laser.transform.position += transform.up * ((distance - .5F) / 2);
-
-        valuesSynced = true;
-
-        laserParticles.Play();
-        laserAudio.Play();
-        laserLight.enabled = true;
-
-        laser.GetComponent<MeshRenderer>().enabled = false;
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SetLaserEnabledServerRpc(bool enabled) {
-        SetLaserEnabledClientRpc(enabled);
-    }
-
-    [ClientRpc]
-    public void SetLaserEnabledClientRpc(bool enabled) {
-        laser.SetActive(false);
-
-        if (enabled) {
-            laserParticles.Play();
-            laserAudio.Play();
-            laserLight.enabled = true;
-        } else {
-            laserParticles.Stop();
-            laserAudio.Stop();
-            laserLight.enabled = false;
-        }
-    }
-    // ReSharper restore ParameterHidesMember
 }

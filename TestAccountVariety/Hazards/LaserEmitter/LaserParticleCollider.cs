@@ -2,11 +2,10 @@ using System;
 using GameNetcodeStuff;
 using TestAccountVariety.Config;
 using UnityEngine;
-using static TestAccountVariety.Utils.ReferenceResolver;
 
 namespace TestAccountVariety.Hazards.LaserEmitter;
 
-public class LaserCollider : MonoBehaviour {
+public class LaserParticleCollider : MonoBehaviour {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public LaserEmitter laserEmitter;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
@@ -19,23 +18,25 @@ public class LaserCollider : MonoBehaviour {
         nextEnemyDamage = Math.Max(0, nextEnemyDamage - Time.deltaTime);
     }
 
-    public void OnTriggerStay(Collider other) {
-        if (!laserEmitter.valuesSynced || !laserEmitter.laser.activeSelf) return;
-
+    public void OnParticleCollision(GameObject other) {
         HandleEnemyDamage(other);
         HandlePlayerDamage(other);
     }
 
-    public void HandleEnemyDamage(Collider collider) {
+    public void HandleEnemyDamage(GameObject other) {
         if (nextEnemyDamage > 0) return;
 
         if (laserEmitter is {
                 IsHost: false, IsServer: false,
             }) return;
 
-        var hasEnemy = TryGetEnemy(collider, out var enemyAI);
+        var hasEnemyCollider = other.TryGetComponent<EnemyAICollisionDetect>(out var enemyCollider);
 
-        if (!hasEnemy || enemyAI.isEnemyDead) return;
+        if (!hasEnemyCollider) return;
+
+        var enemyAI = enemyCollider.mainScript;
+
+        if (!enemyAI || enemyAI.isEnemyDead) return;
 
         TestAccountVariety.Logger.LogDebug($"Laser hitting Enemy: {enemyAI.enemyType.enemyName} ({enemyAI})");
 
@@ -43,12 +44,12 @@ public class LaserCollider : MonoBehaviour {
         nextEnemyDamage = LaserEmitterConfig.laserEnemyCoolDown.Value;
     }
 
-    public void HandlePlayerDamage(Collider collider) {
+    public void HandlePlayerDamage(GameObject other) {
         if (nextDamage > 0) return;
 
         var localPlayer = StartOfRound.Instance.localPlayerController;
 
-        var hasPlayer = collider.TryGetComponent<PlayerControllerB>(out var player);
+        var hasPlayer = other.TryGetComponent<PlayerControllerB>(out var player);
 
         hasPlayer = hasPlayer && localPlayer == player;
 
