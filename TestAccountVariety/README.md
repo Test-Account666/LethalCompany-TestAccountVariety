@@ -36,6 +36,7 @@ Currently, adds:
 <summary>Shop Items</summary>
 
 - Telepad
+- Firework Rocket
 
 </details>
 
