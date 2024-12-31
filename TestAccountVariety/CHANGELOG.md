@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.38.0
+
+\+ Added firework rocket (Shop item)<br>
+\# Renamed the `bomb`to `Zort` due to poll :><br>
+
 ## 1.37.0
 
 \* Fixed laser emitter desyncs<br>
