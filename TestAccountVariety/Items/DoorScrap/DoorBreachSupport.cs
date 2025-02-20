@@ -1,4 +1,5 @@
 using System;
+using DoorBreach;
 using Unity.Netcode;
 using UnityEngine;
 using EventHandler = DoorBreach.EventHandler;
@@ -14,6 +15,7 @@ public static class DoorBreachSupport {
 
     public static void DoorBreached(EventHandler.DoorBreachEventArguments arguments) {
         if (!StartOfRound.Instance.IsHost) return;
+        if (arguments.doorBreachMode != DoorBreachConfig.DoorBreachMode.DESTROY) return;
 
         var random = new Random((uint) (DateTime.Now.Ticks & 0x0000FFFF));
 
