@@ -1,5 +1,11 @@
 # TestAccountVariety
 
+## 1.39.0
+
+\+ Added syncing to the rocket<br>
+\# Reworked laser emitter with new look<br>
+\# Changed how prison mine looks like<br>
+
 ## 1.38.0
 
 \+ Added firework rocket (Shop item)<br>
