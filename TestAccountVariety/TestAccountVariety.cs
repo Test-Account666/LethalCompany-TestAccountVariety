@@ -42,8 +42,7 @@ public class TestAccountVariety : BaseUnityPlugin {
 
         if (DependencyChecker.IsLobbyCompatibilityInstalled()) {
             Logger.LogInfo("Found LobbyCompatibility Mod, initializing support :)");
-            LobbyCompatibilitySupport.Initialize(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION, CompatibilityLevel.Everyone,
-                                                 VersionStrictness.Minor);
+            LobbyCompatibilitySupport.Initialize(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION, CompatibilityLevel.Everyone, VersionStrictness.Minor);
         }
 
         var assembly = Assembly.GetExecutingAssembly();
