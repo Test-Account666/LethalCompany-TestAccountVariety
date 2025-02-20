@@ -49,48 +49,38 @@ public class Rocket : GrabbableObject {
 
     [ServerRpc(RequireOwnership = false)]
     public void ShootRocketServerRpc(int playerWhoLaunched, Vector3 rotation) {
+        if (!TryGetPlayer(playerWhoLaunched, out _launcher)) return;
+
         var random = new Random((uint) (DateTime.Now.Ticks + transform.position.ConvertToInt()));
 
         var particleIndex = random.NextInt(0, particles.Length);
 
-        ShootRocketClientRpc(playerWhoLaunched, rotation, particleIndex);
+        transform.rotation = Quaternion.Euler(rotation);
+
+        ShootRocketClientRpc(playerWhoLaunched, rotation);
+        StartCoroutine(ShootRocket(particleIndex, transform.rotation, transform.up));
     }
 
     [ClientRpc]
-    public void ShootRocketClientRpc(int playerWhoLaunched, Vector3 rotation, int particleIndex) {
-        var hasPlayer = TryGetPlayer(playerWhoLaunched, out var player);
-
-        if (!hasPlayer) return;
-        _launcher = player;
+    public void ShootRocketClientRpc(int playerWhoLaunched, Vector3 rotation) {
+        if (!TryGetPlayer(playerWhoLaunched, out _launcher)) return;
 
         transform.rotation = Quaternion.Euler(rotation);
-
-        var particle = particles[particleIndex];
-
-        StartCoroutine(ShootRocket(particle, transform.rotation, transform.up));
     }
 
-    public IEnumerator ShootRocket(ParticleSystem particle, Quaternion rotation, Vector3 direction) {
-        _isFlying = true;
-
-        var targetPosition = transform.position + direction * 1000;
+    [ClientRpc]
+    public void UpdatePositionAndRotationClientRpc(Vector3 position, Quaternion rotation) {
+        targetFloorPosition = position;
+        transform.rotation = rotation;
 
         flightSource.Play();
-
         sparkParticles.Play();
-        var endTime = Time.time + 1.4F;
+    }
 
-        while (!_collided && Time.time <= endTime) {
-            yield return null;
+    [ClientRpc]
+    public void ExplodeClientRpc(int particleIndex, int explosionIndex) {
+        var particle = particles[particleIndex];
 
-            hasHitGround = false;
-            targetFloorPosition = Vector3.MoveTowards(targetFloorPosition, targetPosition, flightSpeed * Time.deltaTime);
-            transform.rotation = rotation;
-        }
-
-        var random = new Random((uint) (DateTime.Now.Ticks + transform.position.ConvertToInt()));
-
-        var explosionIndex = random.NextInt(0, explosionClips.Length);
         explosionSource.clip = explosionClips[explosionIndex];
         indoorExplosionSource.clip = indoorExplosionClips[explosionIndex];
 
@@ -108,35 +98,81 @@ public class Rocket : GrabbableObject {
         deactivated = true;
 
         meshRenderer.gameObject.SetActive(false);
+    }
 
-        yield return new WaitUntil(() => !particle.isPlaying);
+
+    public IEnumerator ShootRocket(int particleIndex, Quaternion rotation, Vector3 direction) {
+        _isFlying = true;
+
+        var targetPosition = transform.position + direction * 1000;
+
+        var endTime = Time.time + 1.4F;
+
+        while (!_collided && Time.time <= endTime) {
+            yield return null;
+
+            hasHitGround = false;
+            targetFloorPosition = Vector3.MoveTowards(targetFloorPosition, targetPosition, flightSpeed * Time.deltaTime);
+            transform.rotation = rotation;
+
+            UpdatePositionAndRotationClientRpc(targetFloorPosition, rotation);
+        }
+
+        var random = new Random((uint) (DateTime.Now.Ticks + transform.position.ConvertToInt()));
+
+        var explosionIndex = random.NextInt(0, explosionClips.Length);
+
+        ExplodeClientRpc(particleIndex, explosionIndex);
+
+        yield return new WaitUntil(() => !particles[particleIndex].isPlaying);
+        yield return new WaitForSeconds(1);
 
         if (!IsHost && !IsServer) yield break;
 
         NetworkObject.Despawn();
     }
 
-    private const int _COLLISION_LAYER_MASK = 1 << 3 | 1 << 8 | 1 << 11 | 1 << 19 | 1 << 24 | 1 << 25 | 1 << 28 | 1 << 30;
+    [ServerRpc(RequireOwnership = false)]
+    public void CollideWithPlayerServerRpc(Vector3 position, int playerWhoCollided) {
+        if (!TryGetPlayer(playerWhoCollided, out var player)) return;
+
+        UpdatePositionAndRotationClientRpc(position, transform.rotation);
+        _collided = true;
+    }
+
+    private const int _PLAYER_COLLISION_LAYER = 3;
+    private const int _PLAYER_COLLISION_LAYER_MASK = 1 << _PLAYER_COLLISION_LAYER;
+    private const int _COLLISION_LAYER_MASK = _PLAYER_COLLISION_LAYER_MASK | 1 << 8 | 1 << 11 | 1 << 19 | 1 << 24 | 1 << 25 | 1 << 28 | 1 << 30;
+
+    private readonly Collider[] _colliderResults = new Collider[16];
 
     public override void Update() {
         base.Update();
 
         if (!_isFlying) return;
 
-        var results = new Collider[16];
+        var layerMask = IsHost || IsServer? _COLLISION_LAYER_MASK : _PLAYER_COLLISION_LAYER_MASK;
 
-
-        var size = Physics.OverlapSphereNonAlloc(transform.position, .25f, results, _COLLISION_LAYER_MASK);
+        var size = Physics.OverlapSphereNonAlloc(transform.position, .25f, _colliderResults, layerMask);
 
         for (var index = 0; index < size; index++) {
-            var hit = results[index];
+            var hit = _colliderResults[index];
 
             if (hit.gameObject == gameObject) continue;
 
-            if (hit.gameObject.layer == 3) {
+            if (hit.gameObject.layer == _PLAYER_COLLISION_LAYER) {
                 var hasPlayer = hit.TryGetComponent<PlayerControllerB>(out var player);
 
-                if (hasPlayer && player.playerClientId == _launcher.playerClientId) continue;
+                if (!hasPlayer) continue;
+
+                if (player.playerClientId == _launcher.playerClientId) continue;
+
+                var localPlayer = StartOfRound.Instance.localPlayerController;
+
+                if (localPlayer.playerClientId != player.playerClientId) continue;
+
+                CollideWithPlayerServerRpc(targetFloorPosition, (int) localPlayer.playerClientId);
+                break;
             }
 
             _collided = true;
