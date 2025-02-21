@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.40.1
+
+\* Fixed NullReferenceException for Acid Spitter<br>
+
 ## 1.40.0
 
 \+ Added configurable color for Acid Spitter<br>
