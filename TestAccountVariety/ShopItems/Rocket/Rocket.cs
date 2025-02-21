@@ -66,15 +66,15 @@ public class Rocket : GrabbableObject {
         if (!TryGetPlayer(playerWhoLaunched, out _launcher)) return;
 
         transform.rotation = Quaternion.Euler(rotation);
+
+        flightSource.Play();
+        sparkParticles.Play();
     }
 
     [ClientRpc]
     public void UpdatePositionAndRotationClientRpc(Vector3 position, Quaternion rotation) {
         targetFloorPosition = position;
         transform.rotation = rotation;
-
-        flightSource.Play();
-        sparkParticles.Play();
     }
 
     [ClientRpc]
