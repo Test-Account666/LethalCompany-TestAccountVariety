@@ -9,7 +9,7 @@ namespace TestAccountVariety.Hazards.AcidSpitter;
 
 public class AcidSpitterParticleCollider : MonoBehaviour {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public Hazards.AcidSpitter.AcidSpitter laserEmitter;
+    public AcidSpitter acidSpitter;
 
     public ParticleSystem particleSystem;
 
@@ -57,7 +57,7 @@ public class AcidSpitterParticleCollider : MonoBehaviour {
     public void HandleEnemyDamage(Collider other) {
         if (nextEnemyDamage > 0) return;
 
-        if (laserEmitter is {
+        if (acidSpitter is {
                 IsHost: false, IsServer: false,
             }) return;
 
