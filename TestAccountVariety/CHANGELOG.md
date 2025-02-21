@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.40.0
+
+\+ Added configurable color for Acid Spitter<br>
+\# Renamed `Laser Emitter` to `Acid Spitter`<br>
+
 ## 1.39.1
 
 \* Fixed rocket audio and particles<br>
