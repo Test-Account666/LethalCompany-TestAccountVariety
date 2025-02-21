@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.39.1
+
+\* Fixed rocket audio and particles<br>
+
 ## 1.39.0
 
 \+ Added syncing to the rocket<br>
