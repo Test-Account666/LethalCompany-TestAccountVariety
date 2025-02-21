@@ -5,16 +5,16 @@ using TestAccountVariety.Config;
 using UnityEngine;
 using static TestAccountVariety.Utils.ReferenceResolver;
 
-namespace TestAccountVariety.Hazards.LaserEmitter;
+namespace TestAccountVariety.Hazards.AcidSpitter;
 
-public class NewLaserParticleCollider : LaserParticleCollider {
+public class AcidSpitterParticleCollider : MonoBehaviour {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public NewLaserEmitter laserEmitter;
+    public Hazards.AcidSpitter.AcidSpitter laserEmitter;
 
     public ParticleSystem particleSystem;
 
     public BoxCollider boxCollider;
-    public AudioSource laserAudio;
+    public AudioSource acidAudio;
 
     public float colliderUpdateCooldown;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
@@ -43,7 +43,7 @@ public class NewLaserParticleCollider : LaserParticleCollider {
 
         var collisionEvent = _collisionEvents[0];
         boxCollider.center = transform.InverseTransformPoint(collisionEvent.intersection);
-        laserAudio.transform.position = collisionEvent.intersection;
+        acidAudio.transform.position = collisionEvent.intersection;
 
         _nextColliderUpdate = colliderUpdateCooldown;
     }
@@ -67,8 +67,8 @@ public class NewLaserParticleCollider : LaserParticleCollider {
 
         TestAccountVariety.Logger.LogDebug($"Laser hitting Enemy: {enemyAI.enemyType.enemyName} ({enemyAI})");
 
-        enemyAI.HitEnemyOnLocalClient(LaserEmitterConfig.laserEnemyDamage.Value, Vector3.down, playHitSFX: true);
-        nextEnemyDamage = LaserEmitterConfig.laserEnemyCoolDown.Value;
+        enemyAI.HitEnemyOnLocalClient(AcidSpitterConfig.acidEnemyDamage.Value, Vector3.down, playHitSFX: true);
+        nextEnemyDamage = AcidSpitterConfig.acidEnemyCoolDown.Value;
     }
 
     public void HandlePlayerDamage(Collider other) {
@@ -82,7 +82,7 @@ public class NewLaserParticleCollider : LaserParticleCollider {
 
         if (!hasPlayer) return;
 
-        player.DamagePlayer(LaserEmitterConfig.laserPlayerDamage.Value, causeOfDeath: CauseOfDeath.Burning, deathAnimation: 6);
-        nextDamage = LaserEmitterConfig.laserPlayerCoolDown.Value;
+        player.DamagePlayer(AcidSpitterConfig.acidPlayerDamage.Value, causeOfDeath: CauseOfDeath.Burning, deathAnimation: 6);
+        nextDamage = AcidSpitterConfig.acidPlayerCoolDown.Value;
     }
 }

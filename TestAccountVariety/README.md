@@ -46,7 +46,7 @@ Currently, adds:
 - Propulsion Mine
 - Gift Mimic
 - Prison Mine
-- Laser Emitter
+- Acid Spitter
 
 </details>
 
@@ -71,10 +71,10 @@ Currently, adds:
 
 - [Webley](https://thunderstore.io/c/lethal-company/p/Magic_Wesley/) (A lot of testing and help, also some Textures)
 - [Pika Boi](https://thunderstore.io/c/lethal-company/p/s1ckboy/) (A lot of testing and help, also some Models)
+- Smxrez (Some Models)
 - [XuXiaolan](https://thunderstore.io/c/lethal-company/p/XuXiaolan/) (Helped with some issues)
 - [Lunxara](https://thunderstore.io/c/lethal-company/p/Lunxara/) (Ideas and their Models)
-- [suspensy](https://sketchfab.com/3d-models/zenitco-klesch-2p-laser-flashlight-c92e0a1bd8c64ab98d39f4e494045460) (
-  Battery Model and Texture)
+- [suspensy](https://sketchfab.com/3d-models/zenitco-klesch-2p-laser-flashlight-c92e0a1bd8c64ab98d39f4e494045460) (Battery Model and Texture)
 - [Kado3D](https://sketchfab.com/3d-models/bomb-fe701b8dac9f4f048897efc30ba83c9c) (Throwable Bomb Model and Texture)
 - [Moonswept](https://thunderstore.io/c/lethal-company/p/MoonsweptTeam/Moonswept/) (Model and Texture for Cleaning
   Drone)

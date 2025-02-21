@@ -6,20 +6,17 @@ using Unity.Netcode;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
 
-namespace TestAccountVariety.Hazards.LaserEmitter;
+namespace TestAccountVariety.Hazards.AcidSpitter;
 
-public class NewLaserEmitter : LaserEmitter {
+public class AcidSpitter : NetworkBehaviour {
 #pragma warning disable CS8618
-    public NewLaserParticleCollider laserCollider;
+    public AcidSpitterParticleCollider acidCollider;
 
-    public ParticleSystem laserParticles;
-    public AudioSource laserAudio;
-
-    [Obsolete]
-    public Light laserLight;
+    public ParticleSystem acidParticles;
+    public AudioSource acidAudio;
 
     public GameObject rails;
-    public Transform laserTransform;
+    public Transform spitterTransform;
 
     public float maxCeilingDistance;
     public float maxLeftDistance;
@@ -31,12 +28,12 @@ public class NewLaserEmitter : LaserEmitter {
     private Vector3 _ceilingPosition;
     private Vector3 _leftEndPosition;
     private Vector3 _rightEndPosition;
-    private float _laserSpeed;
+    private float _spitterSpeed;
     private bool _reverse;
 
     private readonly NetworkVariable<Vector3> _serverPosition = new();
 
-    private readonly NetworkVariable<Vector3> _serverLaserPosition = new();
+    private readonly NetworkVariable<Vector3> _serverSpitterPosition = new();
 
     private readonly NetworkVariable<Vector3> _serverRailsPosition = new();
     private readonly NetworkVariable<Vector3> _serverRailsScale = new();
@@ -49,7 +46,7 @@ public class NewLaserEmitter : LaserEmitter {
     public override void OnNetworkSpawn() {
         _serverPosition.OnValueChanged += OnServerPositionChanged;
 
-        _serverLaserPosition.OnValueChanged += OnServerLaserPositionChanged;
+        _serverSpitterPosition.OnValueChanged += OnServerSpitterPositionChanged;
 
         _serverRailsPosition.OnValueChanged += OnServerRailsPositionChanged;
         _serverRailsScale.OnValueChanged += OnServerRailsScaleChanged;
@@ -68,7 +65,7 @@ public class NewLaserEmitter : LaserEmitter {
 
     public IEnumerator WaitUntilNetworkSpawned() {
         yield return new WaitUntil(() => _networkSpawned);
-        InitializeLaser();
+        InitializeAcidSpitter();
     }
 
     public override void OnNetworkDespawn() {
@@ -76,7 +73,7 @@ public class NewLaserEmitter : LaserEmitter {
 
         _serverPosition.OnValueChanged -= OnServerPositionChanged;
 
-        _serverLaserPosition.OnValueChanged -= OnServerLaserPositionChanged;
+        _serverSpitterPosition.OnValueChanged -= OnServerSpitterPositionChanged;
 
         _serverRailsPosition.OnValueChanged -= OnServerRailsPositionChanged;
         _serverRailsScale.OnValueChanged -= OnServerRailsScaleChanged;
@@ -85,12 +82,14 @@ public class NewLaserEmitter : LaserEmitter {
     private void Update() {
         if (!IsServer && !IsHost) return;
 
-        MoveLaser();
+        MoveAcidSpitter();
     }
 
-    private void InitializeLaser() {
+    private void InitializeAcidSpitter() {
+        UpdateAcidColor();
+
         var random = new Random((uint) (DateTime.Now.Ticks + transform.position.ConvertToInt()));
-        _laserSpeed = random.NextFloat(LaserEmitterConfig.laserMinimumMovementSpeed.Value, LaserEmitterConfig.laserMaximumMovementSpeed.Value);
+        _spitterSpeed = random.NextFloat(AcidSpitterConfig.spitterMinimumMovementSpeed.Value, AcidSpitterConfig.spitterMaximumMovementSpeed.Value);
 
         var hitCeiling = Physics.Linecast(transform.position, transform.position + transform.up * maxCeilingDistance, out var ceilingInfo, 1 << 8);
         var distance = hitCeiling? ceilingInfo.distance - _CEILING_DISTANCE_BUFFER : maxCeilingDistance;
@@ -120,19 +119,43 @@ public class NewLaserEmitter : LaserEmitter {
         transform.position = _ceilingPosition;
     }
 
-    private void MoveLaser() {
+    private void UpdateAcidColor() {
+        var hasRenderer = acidParticles.TryGetComponent<ParticleSystemRenderer>(out var renderer);
+
+        if (!hasRenderer) {
+            TestAccountVariety.Logger.LogError("Couldn't find particle system renderer!");
+            return;
+        }
+
+        var red = AcidSpitterConfig.acidColorRed.Value / 255F;
+        var green = AcidSpitterConfig.acidColorGreen.Value / 255F;
+        var blue = AcidSpitterConfig.acidColorBlue.Value / 255F;
+
+        renderer.material.color = new(red, green, blue);
+
+        var hasSubRenderer = acidParticles.subEmitters.GetSubEmitterSystem(0).TryGetComponent<ParticleSystemRenderer>(out var subRenderer);
+
+        if (!hasSubRenderer) {
+            TestAccountVariety.Logger.LogError("Couldn't find particle system sub-renderer!");
+            return;
+        }
+
+        subRenderer.material.color = new(red, green, blue);
+    }
+
+    private void MoveAcidSpitter() {
         var targetPosition = _reverse? _leftEndPosition : _rightEndPosition;
-        laserTransform.position = Vector3.Lerp(laserTransform.position, targetPosition, Time.deltaTime * _laserSpeed);
+        spitterTransform.position = Vector3.Lerp(spitterTransform.position, targetPosition, Time.deltaTime * _spitterSpeed);
 
-        if (Vector3.Distance(laserTransform.position, targetPosition) < 0.1f) _reverse = !_reverse;
+        if (Vector3.Distance(spitterTransform.position, targetPosition) < 0.1f) _reverse = !_reverse;
 
-        if (Vector3.Distance(laserTransform.position, _serverLaserPosition.Value) >= _POSITION_UPDATE_THRESHOLD)
-            _serverLaserPosition.Value = laserTransform.position;
+        if (Vector3.Distance(spitterTransform.position, _serverSpitterPosition.Value) < _POSITION_UPDATE_THRESHOLD) return;
+        _serverSpitterPosition.Value = spitterTransform.position;
     }
 
     private void OnServerPositionChanged(Vector3 previous, Vector3 current) => transform.position = current;
 
-    private void OnServerLaserPositionChanged(Vector3 previous, Vector3 current) => laserTransform.position = current;
+    private void OnServerSpitterPositionChanged(Vector3 previous, Vector3 current) => spitterTransform.position = current;
 
     private void OnServerRailsPositionChanged(Vector3 previous, Vector3 current) => rails.transform.position = current;
 
