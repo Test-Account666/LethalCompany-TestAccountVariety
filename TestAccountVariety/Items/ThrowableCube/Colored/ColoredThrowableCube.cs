@@ -178,4 +178,10 @@ public class ColoredThrowableCube : ThrowableCube {
             light.enabled = enableLights;
         }
     }
+
+    public override void OnDestroy() {
+        base.OnDestroy();
+
+        Destroy(renderer.sharedMaterial);
+    }
 }

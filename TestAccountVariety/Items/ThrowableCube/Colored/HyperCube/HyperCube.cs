@@ -124,4 +124,14 @@ public class HyperCube : ThrowableCube {
             meshRenderer.sharedMaterial = materials[0];
         }
     }
+
+    public override void OnDestroy() {
+        base.OnDestroy();
+
+        var meshRenderers = (MeshRenderer[]) [
+            ..starRenderers, renderer,
+        ];
+
+        foreach (var meshRenderer in meshRenderers) Destroy(meshRenderer.sharedMaterial);
+    }
 }
