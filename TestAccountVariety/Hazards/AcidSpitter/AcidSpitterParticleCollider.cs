@@ -55,7 +55,7 @@ public class AcidSpitterParticleCollider : MonoBehaviour {
 
 
     public void HandleEnemyDamage(Collider other) {
-        if (nextEnemyDamage > 0) return;
+        if (nextEnemyDamage > 0 || AcidSpitterConfig.acidEnemyDamage.Value <= 0) return;
 
         if (acidSpitter is {
                 IsHost: false, IsServer: false,
@@ -65,7 +65,7 @@ public class AcidSpitterParticleCollider : MonoBehaviour {
 
         if (!hasEnemy) return;
 
-        TestAccountVariety.Logger.LogDebug($"Laser hitting Enemy: {enemyAI.enemyType.enemyName} ({enemyAI})");
+        //TestAccountVariety.Logger.LogDebug($"Laser hitting Enemy: {enemyAI.enemyType.enemyName} ({enemyAI})");
 
         enemyAI.HitEnemyOnLocalClient(AcidSpitterConfig.acidEnemyDamage.Value, Vector3.down, playHitSFX: true);
         nextEnemyDamage = AcidSpitterConfig.acidEnemyCoolDown.Value;

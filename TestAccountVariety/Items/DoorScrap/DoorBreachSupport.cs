@@ -43,7 +43,7 @@ public static class DoorBreachSupport {
 
         var parentParentObjectName = parentParentObject? parentParentObject.name : null;
 
-        TestAccountVariety.Logger.LogDebug($"Name? {parentParentObjectName}");
+        //TestAccountVariety.Logger.LogDebug($"Name? {parentParentObjectName}");
 
         if (!string.IsNullOrWhiteSpace(parentParentObjectName)) {
             if (parentParentObjectName.Contains("YellowMineDoor")) doorType = "YellowMineDoor";
