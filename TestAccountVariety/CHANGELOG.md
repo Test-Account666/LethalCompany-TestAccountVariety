@@ -1,5 +1,9 @@
 # TestAccountVariety
 
+## 1.40.2
+
+\* Fixed color cubes leaking materials<br>
+
 ## 1.40.1
 
 \* Fixed NullReferenceException for Acid Spitter<br>
