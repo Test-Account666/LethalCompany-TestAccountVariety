@@ -38,7 +38,9 @@ public class HyperCube : ThrowableCube {
         SyncColorServerRpc();
     }
 
-    private void FixedUpdate() {
+    public override void Update() {
+        base.Update();
+
         currentColorHSV += (reverse? -HSV_INCREMENT : HSV_INCREMENT) * Time.deltaTime;
 
         switch (currentColorHSV) {
@@ -109,7 +111,7 @@ public class HyperCube : ThrowableCube {
         if (index >= 1) materialIndex = index - 1;
 
         foreach (var meshRenderer in meshRenderers) {
-            var materials = meshRenderer.materials;
+            var materials = meshRenderer.sharedMaterials;
 
             var material = createNewMaterial? new(materials[materialIndex]) : materials[materialIndex];
 
@@ -118,8 +120,8 @@ public class HyperCube : ThrowableCube {
             material.color = color;
             materials[materialIndex] = material;
 
-            meshRenderer.materials = materials;
-            meshRenderer.material = materials[0];
+            meshRenderer.sharedMaterials = materials;
+            meshRenderer.sharedMaterial = materials[0];
         }
     }
 }

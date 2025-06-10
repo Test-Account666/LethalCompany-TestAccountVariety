@@ -45,7 +45,7 @@ public class ColoredThrowableCube : ThrowableCube {
     public float currentColorHSV;
     public bool reverse;
 
-    public const float HSV_INCREMENT = 0.1F;
+    private const float _HSV_INCREMENT = 0.1F;
 
 
     public override void Start() {
@@ -66,10 +66,12 @@ public class ColoredThrowableCube : ThrowableCube {
         SyncColorServerRpc();
     }
 
-    private void FixedUpdate() {
+    public override void Update() {
+        base.Update();
+
         if (!isRainbow) return;
 
-        currentColorHSV += (reverse? -HSV_INCREMENT : HSV_INCREMENT) * Time.deltaTime;
+        currentColorHSV += (reverse? -_HSV_INCREMENT : _HSV_INCREMENT) * Time.deltaTime;
 
         switch (currentColorHSV) {
             case >= 1F when !reverse:
@@ -165,15 +167,11 @@ public class ColoredThrowableCube : ThrowableCube {
 
         var newColor = new Color(red, green, blue, alpha);
 
-        var material = !createNewMaterial
-            ? renderer.material
-            : new(alpha.Approx(1F, .1F)? opaqueMaterial : transparentMaterial) {
-                color = newColor,
-            };
+        var material = !createNewMaterial? renderer.sharedMaterial : new(alpha.Approx(1F, .1F)? opaqueMaterial : transparentMaterial);
 
-        if (!createNewMaterial) material.color = newColor;
+        material.color = newColor;
 
-        renderer.material = material;
+        renderer.sharedMaterial = material;
 
         foreach (var light in lights) {
             light.color = newColor;
