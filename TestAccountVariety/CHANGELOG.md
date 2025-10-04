@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.41.0
+
+\* Fixed AcidSpitter<br>
+\* Fixed Cage Mine<br>
+
 ## 1.40.2
 
 \* Fixed color cubes leaking materials<br>
