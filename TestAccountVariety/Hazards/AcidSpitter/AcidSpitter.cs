@@ -48,24 +48,12 @@ public class AcidSpitter : NetworkBehaviour {
 
         _serverSpitterPosition.OnValueChanged += OnServerSpitterPositionChanged;
 
-        _serverRailsPosition.OnValueChanged += OnServerRailsPositionChanged;
-        _serverRailsScale.OnValueChanged += OnServerRailsScaleChanged;
-
         _networkSpawned = true;
-    }
 
-    private void Start() {
-        if (!IsServer && !IsHost) {
-            transform.Rotate(0, 0, 180);
-            return;
-        }
+        if (!IsServer && !IsHost) return;
 
-        StartCoroutine(WaitUntilNetworkSpawned());
-    }
-
-    public IEnumerator WaitUntilNetworkSpawned() {
-        yield return new WaitUntil(() => _networkSpawned);
         InitializeAcidSpitter();
+        UpdateAcidSpitterValues();
     }
 
     public override void OnNetworkDespawn() {
@@ -74,9 +62,6 @@ public class AcidSpitter : NetworkBehaviour {
         _serverPosition.OnValueChanged -= OnServerPositionChanged;
 
         _serverSpitterPosition.OnValueChanged -= OnServerSpitterPositionChanged;
-
-        _serverRailsPosition.OnValueChanged -= OnServerRailsPositionChanged;
-        _serverRailsScale.OnValueChanged -= OnServerRailsScaleChanged;
     }
 
     private void Update() {
@@ -85,13 +70,21 @@ public class AcidSpitter : NetworkBehaviour {
         MoveAcidSpitter();
     }
 
+    private void Start() {
+        if (IsServer || IsHost) return;
+
+        UpdateAcidColor();
+    }
+
     private void InitializeAcidSpitter() {
         UpdateAcidColor();
 
-        var random = new Random((uint) (DateTime.Now.Ticks + transform.position.ConvertToInt()));
-        _spitterSpeed = random.NextFloat(AcidSpitterConfig.spitterMinimumMovementSpeed.Value, AcidSpitterConfig.spitterMaximumMovementSpeed.Value);
+        var random = new Random((uint)(DateTime.Now.Ticks + transform.position.ConvertToInt()));
+        _spitterSpeed = random.NextFloat(AcidSpitterConfig.spitterMinimumMovementSpeed.Value,
+            AcidSpitterConfig.spitterMaximumMovementSpeed.Value);
 
-        var hitCeiling = Physics.Linecast(transform.position, transform.position + transform.up * maxCeilingDistance, out var ceilingInfo, 1 << 8);
+        var hitCeiling = Physics.Linecast(transform.position, transform.position + transform.up * maxCeilingDistance,
+            out var ceilingInfo, 1 << 8);
         var distance = hitCeiling? ceilingInfo.distance - _CEILING_DISTANCE_BUFFER : maxCeilingDistance;
 
         _ceilingPosition = transform.position + transform.up * distance;
@@ -114,9 +107,19 @@ public class AcidSpitter : NetworkBehaviour {
         _rightEndPosition = _ceilingPosition + transform.forward * rightDistance;
 
         _reverse = random.NextBool();
-        _serverPosition.Value = _ceilingPosition;
 
         transform.position = _ceilingPosition;
+    }
+
+    public void UpdateAcidSpitterValues() {
+        _serverPosition.Value = _ceilingPosition;
+        _serverRailsScale.Value = rails.transform.localScale;
+        _serverRailsPosition.Value = rails.transform.localPosition;
+    }
+
+    private void LateUpdate() {
+        rails.transform.localPosition = _serverRailsPosition.Value;
+        rails.transform.localScale = _serverRailsScale.Value;
     }
 
     private void UpdateAcidColor() {
@@ -131,7 +134,7 @@ public class AcidSpitter : NetworkBehaviour {
         var green = AcidSpitterConfig.acidColorGreen.Value / 255F;
         var blue = AcidSpitterConfig.acidColorBlue.Value / 255F;
 
-        renderer.material.color = new(red, green, blue);
+        renderer.sharedMaterial.color = new(red, green, blue);
 
         var hasSubRenderer = acidParticles.subEmitters.GetSubEmitterSystem(0).TryGetComponent<ParticleSystemRenderer>(out var subRenderer);
 
@@ -140,7 +143,7 @@ public class AcidSpitter : NetworkBehaviour {
             return;
         }
 
-        subRenderer.material.color = new(red, green, blue);
+        subRenderer.sharedMaterial.color = new(red, green, blue);
     }
 
     private void MoveAcidSpitter() {
@@ -156,10 +159,6 @@ public class AcidSpitter : NetworkBehaviour {
     private void OnServerPositionChanged(Vector3 previous, Vector3 current) => transform.position = current;
 
     private void OnServerSpitterPositionChanged(Vector3 previous, Vector3 current) => spitterTransform.position = current;
-
-    private void OnServerRailsPositionChanged(Vector3 previous, Vector3 current) => rails.transform.position = current;
-
-    private void OnServerRailsScaleChanged(Vector3 previous, Vector3 current) => rails.transform.localScale = current;
 
     public static float GetWallDistance(Vector3 position, Vector3 direction, float maxDistance) {
         var wallDistance = maxDistance;
