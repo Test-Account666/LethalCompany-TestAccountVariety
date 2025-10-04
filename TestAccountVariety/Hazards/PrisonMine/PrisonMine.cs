@@ -47,7 +47,7 @@ public class PrisonMine : NetworkBehaviour {
             return;
         }
 
-        if (!IsHost || !CageMineConfig.useBigEnemyCollider.Value) return;
+        if (!IsHost || CageMineConfig.useBigEnemyCollider.Value) return;
 
         TriggerAsEnemy(other);
     }

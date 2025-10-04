@@ -10,12 +10,12 @@ public class PrisonMineEnemyTrigger : MonoBehaviour {
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     private void OnTriggerEnter(Collider other) {
-        if (!prisonMine.IsHost || CageMineConfig.useBigEnemyCollider.Value) return;
+        if (!prisonMine.IsHost || !CageMineConfig.useBigEnemyCollider.Value) return;
 
         if (prisonMine.nextTrigger > 0) return;
+        if (other.CompareTag("PlayerBody")) return;
 
         var hasPlayer = other.TryGetComponent<PlayerControllerB>(out var _);
-
         if (hasPlayer) return;
 
         prisonMine.TriggerAsEnemy(other);
