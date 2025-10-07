@@ -6,6 +6,7 @@ using TestAccountCore.Dependencies;
 using TestAccountCore.Dependencies.Compatibility;
 using TestAccountVariety.Config;
 using TestAccountVariety.Items.Bomb.Patches;
+using TestAccountVariety.Items.Corn.Patches;
 using TestAccountVariety.Items.ThrowableCube.Patches;
 using TestAccountVariety.Items.Yippee.Patches;
 using TestAccountVariety.Patches;
@@ -32,6 +33,7 @@ public class TestAccountVariety : BaseUnityPlugin {
         Harmony.PatchAll(typeof(ShovelPatch));
         Harmony.PatchAll(typeof(BombPatch));
         Harmony.PatchAll(typeof(RoundManagerPatch));
+        Harmony.PatchAll(typeof(LandminePatch));
 
         Logger.LogDebug("Finished patching!");
     }

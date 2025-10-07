@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using TestAccountVariety.Config;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
@@ -38,8 +37,6 @@ public class AcidSpitter : NetworkBehaviour {
     private readonly NetworkVariable<Vector3> _serverRailsPosition = new();
     private readonly NetworkVariable<Vector3> _serverRailsScale = new();
 
-    private bool _networkSpawned;
-
     private const float _POSITION_UPDATE_THRESHOLD = 0.01f;
     private const float _CEILING_DISTANCE_BUFFER = .45F;
 
@@ -47,8 +44,6 @@ public class AcidSpitter : NetworkBehaviour {
         _serverPosition.OnValueChanged += OnServerPositionChanged;
 
         _serverSpitterPosition.OnValueChanged += OnServerSpitterPositionChanged;
-
-        _networkSpawned = true;
 
         if (!IsServer && !IsHost) return;
 
@@ -65,7 +60,7 @@ public class AcidSpitter : NetworkBehaviour {
     }
 
     private void Update() {
-        if (!IsServer && !IsHost) return;
+        if (!IsServer && !IsHost || !IsSpawned) return;
 
         MoveAcidSpitter();
     }
