@@ -29,6 +29,7 @@ Currently, adds:
 - Evil Yippee
 - Christmas Radio
 - Cookies
+- Popcorn
 
 </details>
 
@@ -89,3 +90,4 @@ Currently, adds:
 - [A glitched npc](https://www.twitch.tv/a_glitched_npc) (Giving the gingerbreadman cookie a voice)
 - [Twisted Translations](https://www.youtube.com/@twistedtranslations) (Music Type for Christmas Radio)
 - [Ludwig](https://www.youtube.com/watch?v=TtY9eRayseg&ab_channel=Ludwig) (Music Type for Christmas Radio)
+- [DiOMeta](https://sketchfab.com/3d-models/popcornbox-bd585ef800dd4a25a1f5365e9089468a) (Popcorn Model and Texture)
