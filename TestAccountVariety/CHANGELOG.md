@@ -1,5 +1,14 @@
 # TestAccountVariety
 
+## 1.42.0
+
+\+ Added new scrap:<br>
+
+- <details>Popcorn</details>
+
+\+ Added new particles to Hypercube implosion<br>
+\* Fixed v73 Support<br>
+
 ## 1.41.0
 
 \* Fixed AcidSpitter<br>
