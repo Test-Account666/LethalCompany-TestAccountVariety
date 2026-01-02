@@ -27,6 +27,14 @@ public class HyperCube : ThrowableCube {
 
     public const float HSV_INCREMENT = 0.1F;
 
+    public override void LoadItemSaveData(int saveData) {
+        IntPacker.Unpack(saveData, out red, out green, out blue, out _, out _, out _, out _);
+
+        choseColor = true;
+        SyncColorServerRpc();
+    }
+
+    public override int GetItemDataToSave() => IntPacker.Pack(red, green, blue, 0, 0, false, false);
 
     public override void Start() {
         base.Start();
