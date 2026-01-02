@@ -16,6 +16,19 @@ public class DoorScrap : Shovel {
         "SteelDoor", "FancyDoor", "YellowMineDoor",
     ];
 
+    public override int GetItemDataToSave() => StableHash(doorType ?? "SteelDoor");
+
+    public override void LoadItemSaveData(int saveData) {
+        foreach (var variation in PossibleDoorVariations) {
+            var hash = StableHash(variation);
+            if (hash != saveData) continue;
+            doorType = variation;
+            break;
+        }
+
+        SyncDoorTypeServerRpc();
+    }
+
     public string? doorType;
 
     public override void OnNetworkSpawn() {
@@ -70,6 +83,21 @@ public class DoorScrap : Shovel {
                 fancyDoorArt.SetActive(true);
                 break;
             }
+        }
+    }
+
+    private static int StableHash(string text) {
+        unchecked {
+            const int offset = unchecked((int)2166136261);
+            const int prime = 16777619;
+
+            var hash = offset;
+            foreach (var character in text) {
+                hash ^= character;
+                hash *= prime;
+            }
+
+            return hash;
         }
     }
 }
