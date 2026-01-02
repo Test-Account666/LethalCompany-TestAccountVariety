@@ -1,5 +1,18 @@
 # TestAccountVariety
 
+## 1.43.0
+
+\+ Added save ability for colored cubes (They now save their color!) <br>
+\+ Added save ability for doors (They now save their variant!) <br>
+\+ Added limited tank to Cleaning Drone Toy (No more infinite TZP) <br>
+\+ Added new scrap:<br>
+
+- <details>Cream</details>
+
+\* Fixed Lunxara painting throwing errors<br>
+\* Fixed all instances of missing materials and sprites<br>
+\* Fixed Popcorn not properly syncing value<br>
+
 ## 1.42.0
 
 \+ Added new scrap:<br>
