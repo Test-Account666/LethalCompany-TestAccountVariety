@@ -16,8 +16,7 @@ public class ColoredThrowableCube : ThrowableCube {
     public Material opaqueMaterial;
     public Material transparentMaterial;
 
-    [FormerlySerializedAs("light")]
-    public Light[] lights;
+    [FormerlySerializedAs("light")] public Light[] lights;
 
     public Item[] itemPropertiesBySize;
     public float[] sizes;
@@ -58,8 +57,10 @@ public class ColoredThrowableCube : ThrowableCube {
         foreach (var lightList in lightLists)
             foreach (var light in lightList.lights)
                 light.enabled = false;
+        foreach (var item in itemPropertiesBySize) item.itemId = itemProperties.itemId;
+        foreach (var light in lightLists.SelectMany(ll => ll.lights)) light.enabled = false;
 
-        var seed = (uint) (StartOfRound.Instance.randomMapSeed + transform.position.ConvertToInt() + (DateTime.Now.Ticks & 0x0000FFFF));
+        var seed = (uint)(StartOfRound.Instance.randomMapSeed + transform.position.ConvertToInt() + (DateTime.Now.Ticks & 0x0000FFFF));
 
         colorRandom = new(seed);
 
@@ -140,7 +141,7 @@ public class ColoredThrowableCube : ThrowableCube {
         this.enableLights = enableLights;
         this.isRainbow = isRainbow;
 
-        Color.RGBToHSV(new(this.red, this.green, this.blue, this.alpha), out currentColorHSV, out var _, out var _);
+        Color.RGBToHSV(new(this.red, this.green, this.blue, this.alpha), out currentColorHSV, out _, out _);
 
         if (this.sizeIndex >= 0) {
             var size = sizes[this.sizeIndex];

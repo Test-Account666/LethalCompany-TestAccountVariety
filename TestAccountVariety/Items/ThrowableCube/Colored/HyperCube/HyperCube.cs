@@ -31,7 +31,7 @@ public class HyperCube : ThrowableCube {
     public override void Start() {
         base.Start();
 
-        var seed = (uint) (StartOfRound.Instance.randomMapSeed + transform.position.ConvertToInt() + (DateTime.Now.Ticks & 0x0000FFFF));
+        var seed = (uint)(StartOfRound.Instance.randomMapSeed + transform.position.ConvertToInt() + (DateTime.Now.Ticks & 0x0000FFFF));
 
         colorRandom = new(seed);
 
@@ -77,7 +77,7 @@ public class HyperCube : ThrowableCube {
         this.green = green;
         this.blue = blue;
 
-        Color.RGBToHSV(new(this.red, this.green, this.blue, 1F), out currentColorHSV, out var _, out var _);
+        Color.RGBToHSV(new(this.red, this.green, this.blue, 1F), out currentColorHSV, out _, out _);
 
         UpdateColor(false, true);
     }
@@ -101,7 +101,7 @@ public class HyperCube : ThrowableCube {
             0 => (MeshRenderer[]) [
                 ..starRenderers,
             ],
-            var _ => (MeshRenderer[]) [
+            _ => (MeshRenderer[]) [
                 renderer,
             ],
         };

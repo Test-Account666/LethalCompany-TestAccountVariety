@@ -38,7 +38,7 @@ public class DoorScrap : Shovel {
     [ServerRpc(RequireOwnership = false)]
     public void SyncDoorTypeServerRpc() {
         if (string.IsNullOrWhiteSpace(doorType)) {
-            var random = new Random((uint) (DateTime.Now.Ticks & 0x0000FFFF));
+            var random = new Random((uint)(DateTime.Now.Ticks & 0x0000FFFF));
 
             doorType = PossibleDoorVariations[random.NextInt(0, PossibleDoorVariations.Length)];
         }

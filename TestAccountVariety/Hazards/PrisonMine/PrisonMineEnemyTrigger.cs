@@ -15,7 +15,7 @@ public class PrisonMineEnemyTrigger : MonoBehaviour {
         if (prisonMine.nextTrigger > 0) return;
         if (other.CompareTag("PlayerBody")) return;
 
-        var hasPlayer = other.TryGetComponent<PlayerControllerB>(out var _);
+        var hasPlayer = other.TryGetComponent<PlayerControllerB>(out _);
         if (hasPlayer) return;
 
         prisonMine.TriggerAsEnemy(other);

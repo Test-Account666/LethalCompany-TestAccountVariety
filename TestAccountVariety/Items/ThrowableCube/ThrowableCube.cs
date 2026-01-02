@@ -97,7 +97,7 @@ public class ThrowableCube : StunGrenadeItem {
     }
 
     private static bool IsBlockedByObstacle(Vector3 explosionPosition, Vector3 playerPosition) =>
-        Physics.Linecast(explosionPosition, playerPosition + Vector3.up * 0.3f, out var _, 256, QueryTriggerInteraction.Ignore);
+        Physics.Linecast(explosionPosition, playerPosition + Vector3.up * 0.3f, out _, 256, QueryTriggerInteraction.Ignore);
 
     private Vector3 CalculatePhysicsForce(Vector3 playerPosition, Vector3 explosionPosition) {
         var distance = Vector3.Distance(playerPosition, explosionPosition);

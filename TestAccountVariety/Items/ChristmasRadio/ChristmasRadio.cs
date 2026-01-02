@@ -32,7 +32,7 @@ public class ChristmasRadio : BoomboxItem {
         musicAudios = ChristmasRadioConfig.radioMusicType.Value switch {
             MusicType.COPYRIGHT_SAFE => copyRightSafeMusicAudios,
             MusicType.GOOGLE_TRANSLATE => googleMusicAudios,
-            var _ => copyRightMusicAudios,
+            _ => copyRightMusicAudios,
         };
     }
 
