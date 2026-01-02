@@ -50,13 +50,6 @@ public class ColoredThrowableCube : ThrowableCube {
     public override void Start() {
         base.Start();
 
-        if (itemPropertiesBySize.Length > 0)
-            foreach (var item in itemPropertiesBySize)
-                item.itemId = itemProperties.itemId;
-
-        foreach (var lightList in lightLists)
-            foreach (var light in lightList.lights)
-                light.enabled = false;
         foreach (var item in itemPropertiesBySize) item.itemId = itemProperties.itemId;
         foreach (var light in lightLists.SelectMany(ll => ll.lights)) light.enabled = false;
 

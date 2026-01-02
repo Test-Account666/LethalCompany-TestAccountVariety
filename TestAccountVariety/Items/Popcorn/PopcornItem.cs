@@ -13,6 +13,13 @@ public class PopcornItem : PhysicsProp {
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     private Random _random;
 
+    public override void OnNetworkSpawn() {
+        base.OnNetworkSpawn();
+        if (!IsHost && !IsServer) return;
+
+        SetValueClientRpc(scrapValue);
+    }
+
     public override void Start() {
         base.Start();
 
