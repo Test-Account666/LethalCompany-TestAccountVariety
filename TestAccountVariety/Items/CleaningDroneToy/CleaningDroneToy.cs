@@ -12,6 +12,8 @@ public class CleaningDroneToy : GrabbableObject {
 
     public AudioClip audioClip;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public float gasTank = 1F;
+    private int _gassed;
 
     public Coroutine? gasCoroutine;
 
@@ -42,6 +44,20 @@ public class CleaningDroneToy : GrabbableObject {
         base.PocketItem();
     }
 
+    #region Overrides of GrabbableObject
+
+    public override void Update() {
+        base.Update();
+
+        if (!IsHost && !IsServer) return;
+
+        if (gasTank <= 0) return;
+        gasTank -= Time.deltaTime * _gassed;
+        _gassed = 0;
+    }
+
+    #endregion
+
     public IEnumerator GasEveryone() {
         var position = transform.position;
 
@@ -63,6 +79,12 @@ public class CleaningDroneToy : GrabbableObject {
 
     [ServerRpc(RequireOwnership = false)]
     public void SpawnGasServerRpc(Vector3 position) {
+        if (gasTank <= 0) {
+            StopSoundClientRpc();
+            return;
+        }
+
+        _gassed++;
         SpawnGasClientRpc(position);
     }
 
