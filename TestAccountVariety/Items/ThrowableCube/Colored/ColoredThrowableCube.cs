@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using TestAccountVariety.Config;
 using TestAccountVariety.Utils;
 using Unity.Netcode;
@@ -45,6 +46,15 @@ public class ColoredThrowableCube : ThrowableCube {
     public bool reverse;
 
     private const float _HSV_INCREMENT = 0.1F;
+
+    public override void LoadItemSaveData(int saveData) {
+        IntPacker.Unpack(saveData, out red, out green, out blue, out alpha, out sizeIndex, out enableLights, out isRainbow);
+        choseColor = true;
+
+        SyncColorServerRpc();
+    }
+
+    public override int GetItemDataToSave() => IntPacker.Pack(red, green, blue, alpha, sizeIndex, enableLights, isRainbow);
 
 
     public override void Start() {
