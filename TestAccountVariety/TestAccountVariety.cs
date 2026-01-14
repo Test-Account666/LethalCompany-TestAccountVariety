@@ -16,8 +16,8 @@ using static TestAccountCore.Netcode;
 namespace TestAccountVariety;
 
 [BepInDependency("TestAccount666.DoorBreach", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency("evaisa.lethallib")]
-[BepInDependency("TestAccount666.TestAccountCore", "1.10.0")]
+[BepInDependency("com.github.teamxiaolan.dawnlib")]
+[BepInDependency("TestAccount666.TestAccountCore", "1.16.0")]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class TestAccountVariety : BaseUnityPlugin {
     public static TestAccountVariety Instance { get; private set; } = null!;
