@@ -31,6 +31,7 @@ Currently, adds:
 - Cookies (Edible, heals)
 - Popcorn (Edible, gambling!)
 - Cream (Noisemaker)
+- Parrot (Silly Noisemaker)
 
 </details>
 

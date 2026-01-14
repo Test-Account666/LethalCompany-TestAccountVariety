@@ -2,6 +2,10 @@
 
 ## 1.44.0
 
+\+ Added new scrap (Will receive better animations in a later update): <br>
+
+- <details>Parrot</details>
+
 \* Fixed type load exception<br>
 \# Replaced LethalLib with DawnLib<br>
 
