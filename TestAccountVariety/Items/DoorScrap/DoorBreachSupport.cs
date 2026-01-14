@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using DoorBreach;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace TestAccountVariety.Items.DoorScrap;
 public static class DoorBreachSupport {
     public static DoorScrapScript doorScrapScript = null!;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Initialize() => EventHandler.doorBreach += DoorBreached;
 
     public static void DoorBreached(EventHandler.DoorBreachEventArguments arguments) {

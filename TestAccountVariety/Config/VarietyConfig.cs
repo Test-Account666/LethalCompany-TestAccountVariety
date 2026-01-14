@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using BepInEx.Configuration;
 using MonoMod.Utils;
@@ -9,7 +11,15 @@ internal abstract class VarietyConfig {
     public abstract void Initialize(ConfigFile configFile);
 
     public static void InitializeConfigs(ConfigFile configFile) {
-        foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
+        var types = new List<Type>();
+
+        try {
+            types.AddRange(Assembly.GetExecutingAssembly().GetTypes());
+        } catch (ReflectionTypeLoadException exception) {
+            types.AddRange(exception.Types.Where(t => t != null));
+        }
+
+        foreach (var type in types) {
             try {
                 if (type == typeof(VarietyConfig)) continue;
 
@@ -19,6 +29,7 @@ internal abstract class VarietyConfig {
 
                 config?.Initialize(configFile);
             } catch (Exception exception) {
+                TestAccountVariety.Logger.LogWarning("You may be able to ignore this error!");
                 exception.LogDetailed();
             }
         }
@@ -26,17 +37,21 @@ internal abstract class VarietyConfig {
 }
 
 public static class ConfigHelper {
-    public static ConfigEntry<int> BindInt(this ConfigFile configFile, string section, string key, int defaultValue, string description, int min = 0,
-                                           int max = 100) =>
+    public static ConfigEntry<int> BindInt(this ConfigFile configFile, string section, string key, int defaultValue, string description,
+        int min = 0,
+        int max = 100) =>
         configFile.Bind(section, key, defaultValue, new ConfigDescription(description, new AcceptableValueRange<int>(min, max)));
 
-    public static ConfigEntry<float> BindFloat(this ConfigFile configFile, string section, string key, float defaultValue, string description, float min = .1F,
-                                               float max = 1F) =>
+    public static ConfigEntry<float> BindFloat(this ConfigFile configFile, string section, string key, float defaultValue,
+        string description, float min = .1F,
+        float max = 1F) =>
         configFile.Bind(section, key, defaultValue, new ConfigDescription(description, new AcceptableValueRange<float>(min, max)));
 
-    public static ConfigEntry<bool> BindBool(this ConfigFile configFile, string section, string key, bool defaultValue, string description) =>
+    public static ConfigEntry<bool> BindBool(this ConfigFile configFile, string section, string key, bool defaultValue,
+        string description) =>
         configFile.Bind(section, key, defaultValue, description);
 
-    public static ConfigEntry<string> BindString(this ConfigFile configFile, string section, string key, string defaultValue, string description) =>
+    public static ConfigEntry<string> BindString(this ConfigFile configFile, string section, string key, string defaultValue,
+        string description) =>
         configFile.Bind(section, key, defaultValue, description);
 }
