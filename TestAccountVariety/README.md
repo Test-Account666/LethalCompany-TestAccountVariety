@@ -7,54 +7,55 @@ Currently, adds:
 <details>
 <summary>Scrap</summary>
 
-- Throwable Cube
-- Yippee
-- Ship Toy
-- Webley Pyramid
-- Pikachu
-- Lunx Painting
-- Alexandria Doll (Lunxara)
-- Pepsi Can
-- Toy Car
-- Corn
-- [Cleaning Drone Toy (Moonswept)](https://thunderstore.io/c/lethal-company/p/MoonsweptTeam/Moonswept/)
-- Door ([Door Breach](https://thunderstore.io/c/lethal-company/p/TestAccount666/DoorBreach/))
-- Shiba Plush
-- Battery
-- Dice
-- Monitor
-- Colored throwable cubes
-- Hypercube
-- Light Switch
-- Evil Yippee
+- Throwable Cube (Throwable weapon)
+- Yippee (Confetti Noisemaker)
+- Ship Toy (Unwieldy light source)
+- Webley Pyramid (Lethal Noisemaker)
+- Pikachu (Silly Noisemaker)
+- Lunx Painting (Art!)
+- Alexandria Doll (Lunxara) (Noisemaker)
+- Pepsi Can (Noisemaker)
+- Toy Car (Noisemaker)
+- Corn (Silly goober. Can be turned into popcorn)
+- [Cleaning Drone Toy (Moonswept)](https://thunderstore.io/c/lethal-company/p/MoonsweptTeam/Moonswept/) (TZP Source)
+- Door ([Door Breach](https://thunderstore.io/c/lethal-company/p/TestAccount666/DoorBreach/)) (Weapon)
+- Shiba Plush (Silly Noisemaker)
+- Battery (Energy recharge device)
+- Dice (Just a working dice)
+- Monitor (Noisemaker)
+- Colored throwable cubes (Throwable weapon)
+- Hypercube (Throwable weapon)
+- Light Switch (Lethal Trolling)
+- Evil Yippee (Trolling)
 - Christmas Radio
-- Cookies
-- Popcorn
+- Cookies (Edible, heals)
+- Popcorn (Edible, gambling!)
+- Cream (Noisemaker)
 
 </details>
 
 <details>
 <summary>Shop Items</summary>
 
-- Telepad
-- Firework Rocket
+- Telepad (Teleportation device)
+- Firework Rocket (Weapon or funny boom)
 
 </details>
 
 <details>
 <summary>Hazards</summary>
 
-- Propulsion Mine
-- Gift Mimic
-- Prison Mine
-- Acid Spitter
+- Propulsion Mine (Boom and you learn to fly)
+- Gift Mimic (Gives you a gift (Probably lethal))
+- Prison Mine (Boom and you learn to prison yourself, or enemies?)
+- Acid Spitter (Probably shouldn't touch it...)
 
 </details>
 
 <details>
 <summary>Decor</summary>
 
-- Stone
+- Stone (Why?)
 
 </details>
 
