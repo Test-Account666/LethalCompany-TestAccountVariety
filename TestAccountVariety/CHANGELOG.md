@@ -1,5 +1,10 @@
 # TestAccountVariety
 
+## 1.44.0
+
+\* Fixed type load exception<br>
+\# Replaced LethalLib with DawnLib<br>
+
 ## 1.43.0
 
 \+ Added save ability for colored cubes (They now save their color!) <br>
